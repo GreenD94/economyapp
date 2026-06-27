@@ -1,0 +1,276 @@
+.page { min-height: 100vh; padding-bottom: var(--space-xl); animation: fadeIn 400ms ease both; }
+
+/* Tabs */
+.tabs {
+  display: flex;
+  border-bottom: 2px solid var(--c-border);
+  background: var(--c-bg);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.tab {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-xs);
+  padding: var(--space-sm) var(--space-md);
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -2px;
+  cursor: pointer;
+  font-size: var(--font-size-md);
+  color: var(--c-text-muted);
+  font-weight: 500;
+}
+
+.tabActive { color: var(--c-hdr); font-weight: 700; border-bottom-color: var(--c-hdr); }
+
+.tabInfo { background: none; border: none; cursor: pointer; color: var(--c-text-muted); display: flex; padding: 0; }
+.tabInfo .material-symbols-outlined { font-size: 16px; }
+
+/* Month nav */
+.monthNav {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: var(--space-sm) var(--space-md);
+  background: var(--c-surface); border-bottom: 1px solid var(--c-border);
+}
+
+.monthBtn { background: none; border: none; font-size: 22px; cursor: pointer; color: var(--c-hdr); padding: 0 var(--space-sm); line-height: 1; }
+.monthLabel { font-weight: 600; font-size: var(--font-size-md); text-transform: capitalize; }
+
+/* Summary card */
+.summaryCard {
+  margin: var(--space-md) var(--space-md) 0;
+  padding: var(--space-md);
+  background: var(--c-hdr);
+  color: var(--c-hdr-txt);
+  border-radius: var(--radius);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.summaryRow { display: flex; justify-content: space-between; font-size: var(--font-size-sm); }
+.summaryLabel { opacity: 0.8; }
+.summaryValue { font-weight: 700; }
+
+.summaryBarWrap {
+  height: 52px;
+  background: rgba(255,255,255,0.25);
+  border-radius: 26px;
+  overflow: hidden;
+  box-shadow: inset 0 1px 3px rgba(0,0,0,0.2);
+}
+
+.summaryBarFill {
+  height: 100%;
+  background: rgba(255,255,255,0.7);
+  border-radius: 26px;
+  transition: width 0.4s ease;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: 10px;
+}
+
+.summaryBarLabel {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--c-hdr);
+  white-space: nowrap;
+}
+
+/* Add button */
+.addRow { display: flex; justify-content: flex-end; padding: var(--space-sm) var(--space-md); }
+.addBtn {
+  background: none; border: 1px solid var(--c-hdr); border-radius: var(--radius);
+  color: var(--c-hdr); padding: var(--space-xs) var(--space-md); font-size: var(--font-size-sm);
+  font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: var(--space-xs);
+}
+.addBtn .material-symbols-outlined { font-size: 18px; }
+
+/* Budget cards */
+.list { padding: 0 var(--space-md); display: flex; flex-direction: column; gap: var(--space-sm); }
+
+.card {
+  background: var(--c-bg); border: 1px solid var(--c-border);
+  border-radius: var(--radius); padding: var(--space-md); display: flex; flex-direction: column; gap: var(--space-sm);
+}
+
+.cardTop { display: flex; align-items: center; justify-content: space-between; }
+.cardName { font-weight: 700; font-size: var(--font-size-md); }
+
+.miniBarWrap {
+  height: 52px;
+  background: var(--c-avail-bg);
+  border-radius: 26px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: opacity 0.15s;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+.miniBarWrap:active { opacity: 0.8; }
+
+.miniBarFill {
+  height: 100%;
+  border-radius: 26px;
+  background: var(--c-spend);
+  transition: width 0.4s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+}
+
+.miniBarLabel {
+  color: white;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 0 10px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+}
+
+.cardAmounts { display: flex; justify-content: space-between; font-size: var(--font-size-sm); margin-top: var(--space-xs); }
+.cardSpent { color: var(--c-text-muted); }
+.cardRemain { font-weight: 600; }
+.remainNeg { color: var(--c-red-border); }
+
+.confirmPayBtn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+  padding: 8px var(--space-md);
+  background: var(--c-save-bg);
+  border: 1px dashed var(--c-save);
+  border-radius: var(--radius-sm);
+  color: var(--c-save);
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  cursor: pointer;
+  justify-content: center;
+  transition: background 0.15s;
+}
+
+.confirmPayBtn:active { background: #bbdefb; }
+
+.confirmPayBtn .material-symbols-outlined { font-size: 16px; }
+
+/* Patrimonio header row */
+.patriHeader {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-sm) var(--space-md);
+}
+
+.addBtnIcon {
+  background: none;
+  border: 1px solid var(--c-hdr);
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--c-hdr);
+  padding: 0;
+  flex-shrink: 0;
+  margin-left: auto;
+}
+
+.addBtnIcon .material-symbols-outlined { font-size: 20px; }
+
+.filterIconBtn {
+  background: none;
+  border: 1px solid var(--c-border);
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--c-text-muted);
+  padding: 0;
+  flex-shrink: 0;
+}
+
+.filterIconBtnActive { border-color: var(--c-hdr); color: var(--c-hdr); }
+.filterIconBtn .material-symbols-outlined { font-size: 20px; }
+
+.filterChips {
+  display: flex;
+  gap: var(--space-xs);
+  padding: 0 var(--space-md) var(--space-sm);
+  flex-wrap: wrap;
+}
+
+.filterChip {
+  padding: var(--space-xs) var(--space-sm);
+  border: 1px solid var(--c-border);
+  border-radius: 16px;
+  background: var(--c-bg);
+  font-size: 12px;
+  cursor: pointer;
+  color: var(--c-text-muted);
+}
+
+.filterChipActive {
+  background: var(--c-hdr);
+  color: var(--c-hdr-txt);
+  border-color: var(--c-hdr);
+  font-weight: 600;
+}
+
+/* Patrimonio cards */
+.patriCard {
+  background: var(--c-bg); border: 1px solid var(--c-border); border-left: 4px solid var(--c-border);
+  border-radius: var(--radius); padding: var(--space-md); display: flex; flex-direction: column; gap: var(--space-xs);
+}
+
+.patriActual    { border-left-color: var(--c-save-border); background: var(--c-save-bg); }
+.patriProjected { border-left-color: var(--c-border); border-left-style: dashed; background: var(--c-surface); }
+.patriGoal      { border-left-color: var(--c-accent); background: var(--c-warn); }
+
+.patriTop { display: flex; align-items: center; justify-content: space-between; }
+.patriMonth { font-weight: 700; font-size: var(--font-size-md); }
+
+.patriBadge {
+  padding: 2px 8px; border-radius: 12px; font-size: 11px; font-weight: 600;
+  background: rgba(0,0,0,0.08); color: var(--c-text-muted);
+}
+
+.patriAmount { font-size: var(--font-size-lg); font-weight: 700; color: var(--c-save); }
+.patriGrowth { font-size: var(--font-size-sm); color: var(--c-text-muted); }
+
+.loading { padding: var(--space-xl); text-align: center; color: var(--c-text-muted); }
+.error { padding: var(--space-md); color: var(--c-red-border); background: var(--c-red-bg); border-radius: var(--radius); margin: var(--space-md); }
+.empty { padding: var(--space-xl); text-align: center; color: var(--c-text-muted); font-size: var(--font-size-sm); }
+
+/* ── Budget detail modal rows ── */
+.detailStat {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: var(--space-xs) 0 var(--space-xs);
+  border-bottom: 1px solid var(--c-border);
+}
+.detailStat:last-child { border-bottom: none; }
+.detailStatLabel { font-size: 13px; color: var(--c-text-muted); }
+.detailStatValue { font-size: 20px; font-weight: 700; }
+.detailStatValueSpend { color: var(--c-spend); }
+.detailStatValueAvail { color: var(--c-avail); }
+.detailStatValueOver  { color: var(--c-spend); }
+
+/* ── Networth card top-right flex row ── */
+.patriTopRight { display: flex; align-items: center; gap: 4px; }

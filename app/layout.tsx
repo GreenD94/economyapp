@@ -1,18 +1,8 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Providers } from "@/features/core/components/providers";
-import { Navigation } from "@/features/core/components/navigation";
-
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
+import { NavWrapper } from "@/features/navigation/components/NavWrapper.component";
+import { AuthGuard } from "@/features/auth/components/AuthGuard.component";
 
 export const metadata: Metadata = {
   title: "Economy App - Track Your Finances",
@@ -23,6 +13,7 @@ export const viewport = {
   width: "device-width",
   initialScale: 1,
   maximumScale: 1,
+  viewportFit: "cover",
 };
 
 export default function RootLayout({
@@ -31,13 +22,19 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
+    <html lang="es">
+      <head>
+        <link
+          rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined"
+        />
+      </head>
+      <body>
         <Providers>
-          {children}
-          <Navigation />
+          <AuthGuard>
+            <NavWrapper />
+            {children}
+          </AuthGuard>
         </Providers>
       </body>
     </html>

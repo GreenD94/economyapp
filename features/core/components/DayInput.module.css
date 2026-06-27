@@ -1,0 +1,48 @@
+@keyframes blink {
+  0%, 100% { border-bottom-color: var(--step-color, var(--c-hdr)); }
+  50%       { border-bottom-color: transparent; }
+}
+
+.wrapper {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px var(--space-xs);
+  border: 1px solid var(--step-light, var(--c-border));
+  border-radius: 6px;
+  background: #fff;
+  cursor: pointer;
+  user-select: none;
+  outline: none;
+  transition: border-color 150ms ease;
+  flex-shrink: 0;
+}
+
+.wrapperOpen {
+  border-color: var(--step-color, var(--c-hdr));
+}
+
+.prefix {
+  font-size: var(--font-size-sm);
+  color: var(--c-text-muted);
+  font-weight: 500;
+}
+
+.value {
+  font-size: var(--font-size-sm);
+  font-weight: 700;
+  color: var(--step-color, var(--c-hdr));
+  min-width: 1.5ch;
+  text-align: right;
+}
+
+.cursorChar {
+  font-size: var(--font-size-sm);
+  font-weight: 700;
+  color: var(--step-color, var(--c-hdr));
+  min-width: 1.5ch;
+  text-align: right;
+  border-bottom: 2px solid var(--step-color, var(--c-hdr));
+  animation: blink 1s step-start infinite;
+  padding-bottom: 1px;
+}

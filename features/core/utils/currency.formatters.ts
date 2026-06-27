@@ -7,6 +7,10 @@ export function formatCurrency(amount: number): string {
   }).format(amount);
 }
 
+export function fmtAmt(n: number): string {
+  return n.toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+
 export function parseCurrency(value: string): number {
   const cleaned = value.replace(/[^0-9.]/g, '');
   const parsed = parseFloat(cleaned);

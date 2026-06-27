@@ -1,0 +1,322 @@
+.page { min-height: 100vh; padding: var(--space-md); display: flex; flex-direction: column; gap: var(--space-lg); animation: fadeIn 400ms ease both; }
+
+/* Section headers */
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-sm);
+}
+
+.sectionTitle {
+  font-size: var(--font-size-sm);
+  font-weight: 700;
+  color: var(--c-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.infoBtn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--c-text-muted);
+  display: flex;
+  align-items: center;
+  padding: 2px;
+}
+
+.infoBtn .material-symbols-outlined { font-size: 18px; }
+
+/* ── Hero Progress Bar ── */
+.heroWrap {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.heroBar {
+  position: relative;
+  height: 52px;
+  border-radius: 26px;
+  background: var(--c-border);
+  overflow: visible;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+.heroFill {
+  position: absolute;
+  inset: 0 auto 0 0;
+  background: var(--c-save);
+  border-radius: 26px;
+  transition: width 2s ease-out;
+  min-width: 32px;
+}
+
+.heroLabelSaved {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  color: #fff;
+  font-size: var(--font-size-sm);
+  font-weight: 700;
+  white-space: nowrap;
+  pointer-events: none;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+  z-index: 2;
+}
+
+.heroLabelRemain {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--c-text-muted);
+  font-size: var(--font-size-sm);
+  font-weight: 700;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.heroLabelSavedOutside {
+  left: 8px;
+  transform: translateY(-50%);
+  color: var(--c-save-border);
+  text-shadow: none;
+}
+
+.heroLabelRemainOutside { right: 8px; }
+
+.negativeRowIcon { font-size: 14px; }
+
+.heroTapHint {
+  text-align: center;
+  font-size: 10px;
+  color: var(--c-text-muted);
+  opacity: 0.6;
+}
+
+/* ── Mes Actual ── */
+.mesDateSubtitle {
+  font-size: 11px;
+  color: var(--c-text-muted);
+  opacity: 0.65;
+  margin-bottom: var(--space-xs);
+  padding-left: 2px;
+}
+
+.negativeBreakdown {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: var(--space-sm);
+  background: var(--c-save-bg);
+  border-radius: var(--radius-sm);
+  margin-bottom: var(--space-sm);
+}
+
+.negativeRow {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--font-size-sm);
+  color: var(--c-save);
+}
+
+.pendingCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-lg) var(--space-md);
+  border: 1px dashed var(--c-border);
+  border-radius: var(--radius);
+  background: var(--c-surface);
+  text-align: center;
+}
+
+.pendingIcon .material-symbols-outlined {
+  font-size: 32px;
+  color: var(--c-text-muted);
+}
+
+.pendingMsg {
+  margin: 0;
+  font-size: var(--font-size-sm);
+  color: var(--c-text-muted);
+  line-height: 1.5;
+}
+
+.pendingBtn {
+  display: inline-block;
+  padding: 8px var(--space-lg);
+  background: var(--c-hdr);
+  color: var(--c-hdr-txt);
+  border-radius: var(--radius);
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.monthCard {
+  background: var(--c-surface);
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius);
+  padding: var(--space-md);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  align-items: center;
+}
+
+.mesLabel {
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  color: var(--c-hdr);
+  text-align: center;
+}
+
+.mesAmount {
+  font-size: var(--font-size-xl);
+  font-weight: 700;
+  color: var(--c-avail);
+  text-align: center;
+  line-height: 1.1;
+}
+
+/* Combined 3-segment bar — same spec as heroBar */
+.combBar {
+  width: 100%;
+  height: 52px;
+  border-radius: 26px;
+  background: var(--c-border);
+  overflow: hidden;
+  cursor: pointer;
+  display: flex;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  transition: opacity 0.15s;
+}
+
+.combBar:active { opacity: 0.8; }
+
+.combSegSpend {
+  height: 100%;
+  background: var(--c-spend);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+  flex-shrink: 0;
+  transition: width 2s ease-out;
+}
+
+.combSegSave {
+  height: 100%;
+  background: var(--c-save);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+  flex-shrink: 0;
+  transition: width 2s ease-out;
+}
+
+.combSegAvail {
+  height: 100%;
+  background: var(--c-avail);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+  flex-shrink: 0;
+  transition: width 2s ease-out;
+}
+
+.combLabel {
+  color: white;
+  font-size: 11px;
+  font-weight: 700;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding: 0 8px;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.4);
+}
+
+.tapHint {
+  text-align: center;
+  font-size: 10px;
+  color: var(--c-text-muted);
+  opacity: 0.6;
+}
+
+/* ── Spending Pie ── */
+.pieWrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-md);
+}
+
+.pieContainer {
+  position: relative;
+  width: 200px;
+  height: 200px;
+}
+
+.pieCenter {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.pieCenterCat  { font-size: 11px; color: var(--c-text-muted); text-align: center; }
+.pieCenterAmt  { font-size: var(--font-size-lg); font-weight: 700; color: var(--c-spend); }
+
+.legend {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.legendItem {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  font-size: var(--font-size-sm);
+}
+
+.legendDot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.legendName { flex: 1; color: var(--c-text-muted); }
+.legendAmt  { font-weight: 600; color: var(--c-spend); }
+
+/* ── Goal Detail Modal ── */
+.detailRow {
+  display: flex;
+  justify-content: space-between;
+  padding: var(--space-sm) 0;
+  border-bottom: 1px solid var(--c-border);
+  font-size: var(--font-size-sm);
+}
+
+.detailRow:last-child { border-bottom: none; }
+.detailLabel { color: var(--c-text-muted); }
+.detailValue { font-weight: 700; }
+.detailValueSpend { color: var(--c-spend); }
+
+.loading { padding: var(--space-xl); text-align: center; color: var(--c-text-muted); }
+.error { padding: var(--space-md); color: var(--c-red-border); background: var(--c-red-bg); border-radius: var(--radius); }

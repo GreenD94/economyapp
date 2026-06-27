@@ -1,0 +1,105 @@
+.page { min-height: 100vh; }
+
+.header {
+  background: var(--c-hdr);
+  color: var(--c-hdr-txt);
+  padding: var(--space-md);
+  font-size: var(--font-size-lg);
+  font-weight: bold;
+  text-align: center;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.alert {
+  background: var(--c-warn);
+  padding: var(--space-md);
+  font-size: var(--font-size-sm);
+  border-bottom: 1px solid #f9a825;
+  text-align: center;
+}
+
+.addBtn {
+  display: block;
+  margin: var(--space-md);
+  padding: var(--space-sm) var(--space-md);
+  background: var(--c-hdr);
+  color: var(--c-hdr-txt);
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  width: calc(100% - 2 * var(--space-md));
+}
+
+.form {
+  margin: 0 var(--space-md) var(--space-md);
+  padding: var(--space-md);
+  background: var(--c-info);
+  border-radius: var(--radius);
+  border: 1px solid var(--c-border);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.formTitle { font-weight: bold; }
+
+.input {
+  padding: var(--space-sm);
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-sm);
+  width: 100%;
+  background: var(--c-bg);
+}
+
+.formActions { display: flex; gap: var(--space-sm); }
+.submitBtn { flex: 1; padding: var(--space-sm); background: var(--c-hdr); color: var(--c-hdr-txt); border: none; border-radius: var(--radius-sm); cursor: pointer; font-weight: 600; }
+.cancelBtn { flex: 1; padding: var(--space-sm); background: none; border: 1px solid var(--c-border); border-radius: var(--radius-sm); cursor: pointer; }
+
+.tableWrap { overflow-x: auto; }
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--font-size-sm);
+}
+
+.table th {
+  background: var(--c-hdr);
+  color: var(--c-hdr-txt);
+  padding: var(--space-sm) var(--space-md);
+  text-align: left;
+  white-space: nowrap;
+}
+
+.table td {
+  padding: var(--space-sm) var(--space-md);
+  border-bottom: 1px solid var(--c-border);
+}
+
+.actualRow td { background: var(--c-alt); }
+.projectedRow td { color: var(--c-text-muted); font-style: italic; }
+.goalRow td { background: var(--c-accent) !important; font-weight: bold; }
+
+.statusBadge {
+  font-size: 11px;
+  padding: 2px 6px;
+  border-radius: 10px;
+  background: var(--c-total);
+  color: #1b5e20;
+}
+
+.projBadge {
+  font-size: 11px;
+  padding: 2px 6px;
+  border-radius: 10px;
+  background: var(--c-surface);
+  color: var(--c-text-muted);
+}
+
+.loading { padding: var(--space-xl); text-align: center; color: var(--c-text-muted); }
+.error { padding: var(--space-md); color: #b71c1c; }

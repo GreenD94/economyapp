@@ -1,0 +1,122 @@
+.wrap {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.label {
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  color: var(--c-text);
+}
+
+/* ── CHIPS mode ── */
+.chips {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.chip {
+  padding: 6px 14px;
+  border-radius: 20px;
+  border: 1px solid var(--c-border);
+  background: transparent;
+  color: var(--c-text-muted);
+  font-size: 13px;
+  cursor: pointer;
+  transition: background 0.1s, border-color 0.1s, color 0.1s;
+}
+
+.chipActive {
+  background: var(--step-light, var(--c-alt));
+  border-color: var(--step-color, var(--c-hdr));
+  color: var(--step-color, var(--c-hdr));
+  font-weight: 700;
+}
+
+.chipOther {
+  padding: 6px 14px;
+  border-radius: 20px;
+  border: 1px dashed var(--c-border);
+  background: transparent;
+  color: var(--c-text-muted);
+  font-size: 13px;
+  cursor: pointer;
+  transition: background 0.1s, border-color 0.1s, color 0.1s;
+}
+
+/* ── PICKING mode ── */
+.pickingRow {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.dateInput {
+  flex: 1;
+  min-width: 0;
+  padding: 8px 10px;
+  border: 1px solid var(--c-border);
+  border-radius: 6px;
+  font-size: var(--font-size-sm);
+  background: #fff;
+  color: var(--c-text);
+  outline: none;
+}
+
+.dateInput:focus {
+  border-color: var(--step-color, var(--c-hdr));
+}
+
+.confirmBtn {
+  width: 100%;
+  padding: 12px;
+  background: var(--step-color, var(--c-hdr));
+  color: var(--c-hdr-txt);
+  border: none;
+  border-radius: var(--radius);
+  font-size: var(--font-size-sm);
+  font-weight: 700;
+  cursor: pointer;
+  margin-top: var(--space-xs);
+  transition: opacity 0.1s;
+}
+
+.confirmBtn:active {
+  opacity: 0.8;
+}
+
+.cancelBtn {
+  width: 100%;
+  padding: 10px;
+  background: transparent;
+  color: var(--c-text-muted);
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius);
+  font-size: var(--font-size-sm);
+  cursor: pointer;
+  transition: background 0.1s;
+}
+
+.cancelBtn:active {
+  background: var(--c-info);
+}
+
+/* ── CONFIRMED mode ── */
+.confirmedDisplay {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  background: var(--step-light, var(--c-alt));
+  border: 1px solid var(--step-color, var(--c-hdr));
+  border-radius: var(--radius);
+  color: var(--step-color, var(--c-hdr));
+  font-weight: 600;
+  font-size: var(--font-size-sm);
+}
+
+.confirmedDisplay .material-symbols-outlined {
+  font-size: 16px;
+}

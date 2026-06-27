@@ -1,0 +1,107 @@
+/* === Blinking cursor === */
+
+@keyframes blink {
+  0%, 100% { border-bottom-color: var(--step-color, var(--c-hdr)); }
+  50%       { border-bottom-color: transparent; }
+}
+
+.cursorChar {
+  border-bottom: 2px solid var(--step-color, var(--c-hdr));
+  animation: blink 1s step-start infinite;
+  padding-bottom: 1px;
+}
+
+/* === Normal size === */
+
+.wrapper {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  max-width: 100%;
+  min-width: 140px;
+  padding: var(--space-sm) var(--space-sm) var(--space-sm) calc(var(--space-sm) + 1ch + 4px);
+  border: 2px solid var(--step-light, var(--c-border));
+  border-radius: var(--radius);
+  background: #fff;
+  cursor: pointer;
+  transition: width 200ms ease, border-color 150ms ease;
+  user-select: none;
+  outline: none;
+}
+
+.wrapperFocused {
+  border-color: var(--step-color, var(--c-hdr));
+}
+
+.wrapperFullWidth {
+  display: flex;
+  width: 100%;
+  min-width: 0;
+}
+
+.wrapperDisabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.mirror {
+  position: absolute;
+  visibility: hidden;
+  white-space: pre;
+  pointer-events: none;
+  font-size: var(--font-size-xl);
+  font-weight: 700;
+  padding: var(--space-sm) var(--space-sm) var(--space-sm) calc(var(--space-sm) + 1ch + 4px);
+  top: 0;
+  left: 0;
+}
+
+.symbol {
+  position: absolute;
+  left: var(--space-sm);
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: var(--font-size-xl);
+  font-weight: 700;
+  color: var(--step-color, var(--c-hdr));
+  pointer-events: none;
+  user-select: none;
+  line-height: 1;
+}
+
+.display {
+  font-size: var(--font-size-xl);
+  font-weight: 700;
+  color: var(--step-color, var(--c-hdr));
+  text-align: right;
+  width: 100%;
+  line-height: 1.2;
+  letter-spacing: 0.01em;
+}
+
+/* === Compact size (modals, inline rows) === */
+
+.wrapperCompact {
+  min-width: 80px;
+  padding: 4px var(--space-xs) 4px calc(var(--space-xs) + 1ch + 2px);
+  border-width: 1px;
+  border-radius: 6px;
+}
+
+.mirrorCompact {
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  padding: 4px var(--space-xs) 4px calc(var(--space-xs) + 1ch + 2px);
+}
+
+.symbolCompact {
+  left: var(--space-xs);
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+}
+
+.displayCompact {
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  color: var(--c-text);
+}

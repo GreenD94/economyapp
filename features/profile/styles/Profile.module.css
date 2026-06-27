@@ -1,0 +1,105 @@
+.page {
+  padding: var(--space-md);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+  animation: fadeIn 400ms ease both;
+}
+
+.section {
+  background: var(--c-surface);
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius);
+  padding: var(--space-md);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.sectionTitle {
+  font-size: var(--font-size-sm);
+  font-weight: 700;
+  color: var(--c-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.emailRow {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.emailIcon {
+  color: var(--c-text-muted);
+}
+
+.emailIcon .material-symbols-outlined { font-size: 20px; }
+
+.email {
+  font-size: var(--font-size-md);
+  color: var(--c-text);
+  font-weight: 500;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.label {
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  color: var(--c-text-muted);
+}
+
+.input {
+  padding: var(--space-sm) var(--space-md);
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-md);
+  background: var(--c-info);
+  outline: none;
+  width: 100%;
+}
+
+.input:focus { border-color: var(--c-hdr); }
+
+.saveBtn {
+  width: 100%;
+  padding: var(--space-sm) var(--space-md);
+  background: var(--c-hdr);
+  color: var(--c-hdr-txt);
+  border: none;
+  border-radius: var(--radius);
+  font-size: var(--font-size-md);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.saveBtn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+.savedMsg {
+  font-size: var(--font-size-sm);
+  color: var(--c-green-border);
+  text-align: center;
+  font-weight: 600;
+}
+
+.error {
+  font-size: var(--font-size-sm);
+  color: var(--c-red-border);
+}
+
+.dangerBtn {
+  width: 100%;
+  padding: var(--space-sm) var(--space-md);
+  background: none;
+  border: 1px solid var(--c-red-border);
+  color: var(--c-red-border);
+  border-radius: var(--radius);
+  font-size: var(--font-size-md);
+  font-weight: 600;
+  cursor: pointer;
+}

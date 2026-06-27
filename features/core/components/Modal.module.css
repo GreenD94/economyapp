@@ -1,0 +1,221 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  z-index: 200;
+  display: flex;
+  align-items: flex-end;
+}
+
+.sheet {
+  background: var(--c-bg);
+  width: 100%;
+  max-height: 85vh;
+  border-radius: 16px 16px 0 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  animation: slideUp 0.2s ease;
+}
+
+@keyframes slideUp {
+  from { transform: translateY(100%); }
+  to   { transform: translateY(0); }
+}
+
+/* Header and body start invisible; .revealed is added by JS after the slide finishes */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-md);
+  border-bottom: 1px solid var(--c-border);
+  flex-shrink: 0;
+  opacity: 0;
+  transition: opacity 240ms ease;
+}
+
+.body {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--space-md);
+  -webkit-overflow-scrolling: touch;
+  opacity: 0;
+  transition: opacity 260ms ease;
+  transition-delay: 40ms;
+}
+
+.revealed {
+  opacity: 1;
+}
+
+.title {
+  font-size: var(--font-size-lg);
+  font-weight: 700;
+  color: var(--step-color, var(--c-hdr));
+}
+
+.close {
+  background: none;
+  border: none;
+  font-size: 18px;
+  color: var(--c-text-muted);
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: var(--radius);
+  line-height: 1;
+}
+
+/* ConfirmModal styles */
+.confirmMessage {
+  font-size: var(--font-size-md);
+  margin-bottom: var(--space-lg);
+  line-height: 1.5;
+  color: var(--c-text);
+}
+
+.confirmActions {
+  display: flex;
+  gap: var(--space-sm);
+}
+
+.modalHeading {
+  text-align: center;
+  font-weight: 700;
+  color: var(--step-color, var(--c-hdr));
+  margin-bottom: var(--space-xs);
+  font-size: var(--font-size-md);
+}
+
+.modalSubRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--space-md);
+  font-size: var(--font-size-sm);
+}
+
+.modalSubDate {
+  color: var(--c-text-muted);
+}
+
+.modalSubAmount {
+  font-weight: 600;
+  color: var(--step-color, var(--c-hdr));
+}
+
+.cancelBtn {
+  flex: 1;
+  padding: var(--space-sm) var(--space-md);
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius);
+  background: none;
+  cursor: pointer;
+  font-size: var(--font-size-md);
+}
+
+.confirmBtn {
+  flex: 1;
+  padding: var(--space-sm) var(--space-md);
+  border: none;
+  border-radius: var(--radius);
+  cursor: pointer;
+  font-size: var(--font-size-md);
+  font-weight: 600;
+  background: var(--c-hdr);
+  color: var(--c-hdr-txt);
+}
+
+.confirmDanger {
+  background: var(--c-red-border);
+  color: #fff;
+}
+
+/* FormModal styles */
+.formField {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  margin-bottom: var(--space-md);
+}
+
+/* Smooth show/hide for conditional fields — CSS grid row trick */
+.fieldReveal {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 280ms ease;
+}
+
+.fieldRevealVisible {
+  grid-template-rows: 1fr;
+}
+
+.fieldReveal > .formField {
+  min-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 180ms ease;
+}
+
+.fieldRevealVisible > .formField {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.formLabel {
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  color: var(--c-text-muted);
+}
+
+.formInput, .formSelect {
+  padding: var(--space-sm);
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-md);
+  background: var(--c-info);
+  width: 100%;
+}
+
+.formRow {
+  display: flex;
+  gap: var(--space-sm);
+}
+
+.formActions {
+  display: flex;
+  gap: var(--space-sm);
+  margin-top: var(--space-md);
+}
+
+.submitBtn {
+  flex: 1;
+  padding: var(--space-sm) var(--space-md);
+  background: var(--c-hdr);
+  color: var(--c-hdr-txt);
+  border: none;
+  border-radius: var(--radius);
+  cursor: pointer;
+  font-size: var(--font-size-md);
+  font-weight: 600;
+  transition: opacity 0.15s;
+}
+
+.submitBtn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.submitBtnSpend { background: var(--c-spend); }
+.submitBtnEarn  { background: var(--c-earn); }
+
+.secondaryBtn {
+  flex: 1;
+  padding: var(--space-sm) var(--space-md);
+  background: none;
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius);
+  cursor: pointer;
+  font-size: var(--font-size-md);
+}

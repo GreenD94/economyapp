@@ -1,0 +1,108 @@
+@keyframes slideUp {
+  from { transform: translateY(100%); }
+  to   { transform: translateY(0); }
+}
+
+@keyframes slideDown {
+  from { transform: translateY(0); }
+  to   { transform: translateY(100%); }
+}
+
+.backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 299;
+  background: rgba(0, 0, 0, 0.3);
+}
+
+.keyboard {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 300;
+  background: var(--c-surface);
+  border-top: 1px solid var(--c-border);
+  padding: var(--space-sm) var(--space-sm) calc(var(--space-md) + env(safe-area-inset-bottom, 0px)) var(--space-sm);
+  animation: slideUp 250ms ease forwards;
+}
+
+.keyboardClosing {
+  animation: slideDown 280ms ease forwards;
+  pointer-events: none;
+}
+
+/* Current value shown at the top of the keyboard so it's visible even when the input is covered */
+.valueDisplay {
+  text-align: right;
+  font-size: var(--font-size-xl);
+  font-weight: 700;
+  color: var(--step-color, var(--c-hdr));
+  padding: var(--space-xs) var(--space-sm) var(--space-sm) var(--space-sm);
+  border-bottom: 1px solid var(--c-border);
+  margin-bottom: var(--space-sm);
+  letter-spacing: 0.01em;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-xs);
+  margin-bottom: var(--space-xs);
+}
+
+.row:last-child {
+  margin-bottom: 0;
+}
+
+.digitBtn {
+  height: 60px;
+  font-size: var(--font-size-lg);
+  font-weight: 700;
+  color: var(--c-text);
+  background: var(--c-bg);
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius);
+  cursor: pointer;
+  touch-action: manipulation;
+  transition: background 80ms ease;
+}
+
+.digitBtn:active {
+  background: var(--step-light, var(--c-alt));
+}
+
+.actionBtn {
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--c-info);
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius);
+  cursor: pointer;
+  touch-action: manipulation;
+  color: var(--step-mid, var(--c-hdr));
+  transition: background 80ms ease;
+}
+
+.actionBtn:active {
+  background: var(--step-light, var(--c-alt));
+}
+
+.doneBtn {
+  height: 60px;
+  font-size: var(--font-size-md);
+  font-weight: 700;
+  color: var(--c-hdr-txt);
+  background: var(--step-color, var(--c-hdr));
+  border: none;
+  border-radius: var(--radius);
+  cursor: pointer;
+  touch-action: manipulation;
+  transition: opacity 80ms ease;
+}
+
+.doneBtn:active {
+  opacity: 0.8;
+}

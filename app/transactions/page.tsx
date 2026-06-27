@@ -1,5 +1,10 @@
-import { TransactionsContainer } from '@/features/transactions/containers/transaction.transactions.container';
+import { Suspense } from 'react';
+import { TransactionsContainer } from '@/features/transactions/containers/Transactions.container';
 
 export default function TransactionsPage() {
-  return <TransactionsContainer />;
+  return (
+    <Suspense>
+      <TransactionsContainer />
+    </Suspense>
+  );
 }

@@ -1,0 +1,157 @@
+@keyframes slideUp {
+  from { transform: translateY(100%); }
+  to   { transform: translateY(0); }
+}
+
+@keyframes slideDown {
+  from { transform: translateY(0); }
+  to   { transform: translateY(100%); }
+}
+
+/* collapsed — no note yet */
+.trigger {
+  padding: var(--space-xs) 0;
+  margin-top: var(--space-sm);
+  cursor: pointer;
+  background: none;
+  border: none;
+  font-size: var(--font-size-sm);
+  color: var(--c-hdr);
+  text-align: center;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  font-family: inherit;
+  display: block;
+  width: 100%;
+}
+
+.trigger:hover {
+  opacity: 0.75;
+}
+
+/* note exists row */
+.noteRow {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: var(--space-xs) 0;
+}
+
+.notePreview {
+  flex: 1;
+  font-size: var(--font-size-sm);
+  color: var(--c-text);
+  cursor: pointer;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.notePreview:hover {
+  color: var(--c-hdr);
+}
+
+.iconBtn {
+  background: none;
+  border: none;
+  padding: 4px;
+  cursor: pointer;
+  color: var(--c-text-muted);
+  display: flex;
+  align-items: center;
+  line-height: 1;
+  border-radius: 4px;
+  transition: color 100ms ease;
+  touch-action: manipulation;
+}
+
+.iconBtn:hover {
+  color: var(--c-hdr);
+}
+
+.iconBtn:last-child:hover {
+  color: var(--c-spend);
+}
+
+.iconBtn .material-symbols-outlined {
+  font-size: 18px;
+}
+
+/* backdrop */
+.backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 399;
+  background: rgba(0, 0, 0, 0.3);
+}
+
+/* slide-up panel */
+.panel {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 400;
+  background: var(--c-surface);
+  border-radius: 16px 16px 0 0;
+  border-top: 1px solid var(--c-border);
+  padding: var(--space-md) var(--space-md) calc(var(--space-lg) + env(safe-area-inset-bottom, 0px)) var(--space-md);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  animation: slideUp 250ms ease forwards;
+}
+
+.panelClosing {
+  animation: slideDown 280ms ease forwards;
+  pointer-events: none;
+}
+
+.panelLabel {
+  margin: 0;
+  font-size: var(--font-size-sm);
+  color: var(--c-text-muted);
+  font-weight: 500;
+}
+
+.textarea {
+  width: 100%;
+  min-height: 90px;
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius);
+  padding: var(--space-sm);
+  font-size: var(--font-size-md);
+  font-family: inherit;
+  color: var(--c-text);
+  background: var(--c-bg);
+  resize: none;
+  outline: none;
+  box-sizing: border-box;
+  line-height: 1.5;
+}
+
+.textarea:focus {
+  border-color: var(--c-hdr);
+}
+
+.textarea::placeholder {
+  color: var(--c-text-muted);
+}
+
+.doneBtn {
+  width: 100%;
+  height: 52px;
+  font-size: var(--font-size-md);
+  font-weight: 700;
+  color: var(--c-hdr-txt);
+  background: var(--c-hdr);
+  border: none;
+  border-radius: var(--radius);
+  cursor: pointer;
+  touch-action: manipulation;
+  transition: opacity 80ms ease;
+}
+
+.doneBtn:active {
+  opacity: 0.8;
+}

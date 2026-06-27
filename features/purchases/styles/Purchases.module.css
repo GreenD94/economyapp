@@ -1,0 +1,31 @@
+.page { min-height: 100vh; animation: fadeIn 400ms ease both; }
+
+.tabs {
+  display: flex;
+  border-bottom: 2px solid var(--c-border);
+  background: var(--c-bg);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.tab {
+  flex: 1;
+  padding: var(--space-sm) var(--space-md);
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -2px;
+  cursor: pointer;
+  font-size: var(--font-size-md);
+  color: var(--c-text-muted);
+  font-weight: 500;
+}
+
+.tabActive {
+  color: var(--c-hdr);
+  font-weight: 700;
+  border-bottom-color: var(--c-hdr);
+}
+
+.content { display: flex; flex-direction: column; }

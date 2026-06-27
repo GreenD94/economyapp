@@ -1,0 +1,50 @@
+.bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: calc(56px + env(safe-area-inset-top, 0px));
+  background: var(--c-hdr);
+  color: var(--c-hdr-txt);
+  display: flex;
+  align-items: flex-end;
+  z-index: 50;
+  padding: 0 var(--space-xs) 0;
+  padding-top: env(safe-area-inset-top, 0px);
+}
+
+.homeBtn {
+  background: none;
+  border: none;
+  color: var(--c-hdr-txt);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  padding: var(--space-sm);
+  border-radius: var(--radius);
+  flex-shrink: 0;
+}
+
+.homeBtn .material-symbols-outlined { font-size: 26px; }
+
+.title {
+  flex: 1;
+  text-align: center;
+  font-size: var(--font-size-lg);
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.profileBtn {
+  background: none;
+  border: none;
+  color: var(--c-hdr-txt);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  padding: var(--space-sm);
+  border-radius: var(--radius);
+  flex-shrink: 0;
+}
+
+.profileBtn .material-symbols-outlined { font-size: 26px; }
