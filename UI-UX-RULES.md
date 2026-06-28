@@ -4,6 +4,34 @@ Extends and overrides `../UI-UX-RULES.md` (general rules). Rules here take prece
 
 ---
 
+## MANDATORY — Before any UI/UX work
+
+**Before writing, editing, or reviewing any frontend component or CSS, the AI agent MUST:**
+
+1. Read this file (`economy-app/UI-UX-RULES.md`) in full.
+2. Read the general rules file (`D:\github\saborea\UI-UX-RULES.md`) in full.
+3. Cross-check every element against both files before generating code.
+4. If a rule is unclear or two rules conflict, surface the conflict to the user — do not guess.
+
+**No exceptions.** A component that looks correct but violates these rules will be rejected and must be rewritten. The cost of reading rules upfront is far lower than rewriting components after the fact.
+
+---
+
+## Sheet dismiss — no close or X buttons
+
+Bottom sheets and modals **never** have a "Cerrar", "Cancelar", or ✕ button unless the sheet contains a **destructive or multi-step flow** that needs an explicit escape (e.g. a confirm-delete sheet where cancelling is the safe action).
+
+For all informational and detail sheets, the backdrop click handles dismissal. Adding a close button is redundant — the user already knows to tap outside.
+
+**Rule:** Do not add `Cerrar` / `×` / `Cancelar` as the last element of a sheet just to "provide a way to close." If the only purpose of the button is to dismiss, remove it.
+
+**Exceptions where a cancel/close button IS required:**
+- ConfirmModal (destructive action): `Cancelar` is the primary safe exit — backdrop should not be the only escape for a delete.
+- Multi-step modal: a top-left back button (not the same as a close button) is needed for step navigation.
+- Modals with no visible backdrop (full-screen): user has no other affordance to dismiss.
+
+---
+
 ## Sheet / modal content animations
 
 **Read the full rule in `../UI-UX-RULES.md` → "Bottom-sheet / modal content reveal".**
@@ -59,6 +87,10 @@ Overrides the general rule. Segment colors follow the money semantic system:
 | Spent this month | `--c-spend` (pink) | Spending |
 | Savings target | `--c-save` (blue, lighter or same) | Saving |
 | Available / remainder | `--c-avail` (yellow) | Available |
+
+## Progress bar tap hint
+
+The "Toca para ver detalles" hint below every tappable bar must always be **centered horizontally**. Never left- or right-aligned. CSS: `text-align: center`. Applies to both the master budget bar and all bolsillo mini-bars.
 
 ---
 
@@ -315,6 +347,8 @@ All modal and settings forms use question-style labels per the general rule. Exc
 | Wishlist add/edit | item name | ¿Qué quieres comprar? |
 | Wishlist add/edit | price | ¿Cuánto cuesta? |
 | Wishlist add/edit | priority | ¿Qué tan prioritario es? |
+| Add/edit net worth | month field | ¿Para qué mes es este registro? |
+| Add/edit net worth | amount field | ¿Cuánto ahorraste este mes? |
 
 **Exception (compact row, noun labels kept):** expense modal `Categoría` + `Tipo` side-by-side row — full question text overflows at half-modal width. Income modals no longer use a side-by-side row for Monto + Tipo; each is its own full-width field.
 
@@ -350,6 +384,19 @@ Variable expenses are tracked through the expenses system over time. The onboard
 - Every category must be a specific, identifiable expense type.
 - **Never create a generic catchall** like "Suscripciones" or "Varios".
 - If a user has a subscription (Netflix, Spotify), they log it as a regular expense under the closest category.
+
+### The Movimientos vs Presupuesto split — which categories go where
+
+This is the most important UX rule for the finance system. The two systems are not interchangeable.
+
+| System | Purpose | Categories that belong here |
+|---|---|---|
+| **Movimientos → Gastos frecuentes** | Recurring bills with a known due date. User "confirms" a specific payment on a specific date. | Arriendo, Electricidad, Agua, Gas, Internet, Telefono, Gym, Carro, Claude |
+| **Finance → Presupuesto** | Spending envelopes without a fixed date. User spends freely; each logged expense reduces the bar. | Alimentacion, Transporte, Higiene, Salud, Casa, Ocio, Imprevistos, Caprichos, Tecnologia |
+
+**The link:** when a user logs any expense in Movimientos (or Otros gastos) with a category tag, the backend automatically reduces `spent_this_month` for that budget category in Presupuesto. The systems are connected through the category tag — they are not redundant.
+
+**Frontend constant:** `BUDGET_CATEGORIES` in `features/finance/finance.types.ts` — the 9 envelope categories. Use this to populate the category picker in the Presupuesto add-category modal and to filter the list (never show Movimientos-type categories in the budget picker).
 
 ---
 
@@ -502,3 +549,540 @@ Used in the edit-income form (and any future form that captures an optional edit
 - Never interpolate user-supplied text into `style`, `href`, `src`, or event handler attributes
 
 See `BUSINESS-RULES.md` for backend equivalent rules.
+
+---
+
+## Spacing grid — 4px rule (NEW — MANDATORY)
+
+**All margin, padding, and gap values must be multiples of 4.**
+
+| Allowed | Tokens |
+|---|---|
+| 4px | `--space-xs` |
+| 8px | `--space-sm` |
+| 12px | — (use `var(--space-sm)` + explicit override only when needed) |
+| 16px | `--space-md` |
+| 24px | `--space-lg` |
+| 32px | `--space-xl` |
+
+**Never use** 2, 3, 5, 6, 7, 9, 10, 11, 13, 14, 15, 17, 18... as spacing values. If you find yourself reaching for one of these numbers, round up or down to the nearest multiple of 4.
+
+**Preference rule:** prefer multiples of 8 (8, 16, 24, 32) when space allows. Use 4 only when 8 is too much.
+
+**Font size is exempt** from the grid rule — use the defined scale (`--font-size-sm: 13px`, `--font-size-md: 15px`, `--font-size-lg: 18px`, `--font-size-xl: 22px`). Fine-grained font values like `11px` for captions are acceptable as font-size only.
+
+**Applies to:** `margin`, `padding`, `gap`, `top`, `left`, `bottom`, `right` in fixed/absolute positioned elements, `border-width` (but 1px borders are always OK), `border-radius` when used as a generic corner value.
+
+---
+
+## Page & list entry animations
+
+Every page container gets `animation: fadeIn 400ms ease both` — defined in `globals.css`.
+
+Item cards inside a list get a staggered entrance:
+```css
+.card { animation: fadeInUp 280ms ease both; animation-delay: calc(var(--i, 0) * 60ms); }
+```
+Set `style={{ '--i': index } as React.CSSProperties}` on each card to activate the stagger.
+
+Section headers get `animation: fadeInUp 260ms ease both` — slightly faster than cards.
+
+**keyframes (globals.css):**
+```css
+@keyframes fadeIn    { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; } }
+@keyframes fadeInUp  { from { opacity: 0; transform: translateY(8px);  } to { opacity: 1; } }
+```
+
+**Never add** additional CSS animations on elements inside bottom sheets — see sheet reveal rules above.
+
+---
+
+## Tab bar
+
+The top tab bar is sticky, sits below the TopBar, and uses an underline indicator — **never a pill/filled background**.
+
+```css
+.tabs {
+  display: flex;
+  border-bottom: 2px solid var(--c-border);
+  background: var(--c-bg);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+.tab {
+  flex: 1;
+  display: flex; align-items: center; justify-content: center;
+  gap: var(--space-xs);
+  padding: var(--space-sm) var(--space-md);
+  border-bottom: 2px solid transparent;
+  margin-bottom: -2px; /* overlaps the container border-bottom */
+  font-size: var(--font-size-md); font-weight: 500; color: var(--c-text-muted);
+}
+.tabActive { color: var(--c-hdr); font-weight: 700; border-bottom-color: var(--c-hdr); }
+.tabActivePink { color: var(--c-spend); font-weight: 700; border-bottom-color: var(--c-spend); }
+```
+
+- Info icon inside tab bar: `font-size: 16px` Material Symbol, no border, padding 0.
+- Tab switching animates content with `slideInFromRight` / `slideInFromLeft` (280ms, cubic-bezier(0.4, 0, 0.2, 1)).
+
+---
+
+## Month navigation bar
+
+Appears directly below the tab bar on Ingresos, Gastos tabs.
+
+```css
+.monthNav {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: var(--space-sm) var(--space-md);
+  background: var(--c-surface); border-bottom: 1px solid var(--c-border);
+}
+.monthBtn { font-size: 22px; color: var(--c-hdr); padding: 0 var(--space-sm); }
+.monthLabel { font-weight: 600; font-size: var(--font-size-md); text-transform: capitalize; }
+```
+
+- Arrows are `‹` and `›` characters (not Material icons).
+- Month label is always **capitalized** (`text-transform: capitalize`).
+- Background is `var(--c-surface)` — one shade darker than page background.
+
+---
+
+## Section headers
+
+**Exact canonical pattern from Transactions:**
+
+```css
+.sectionHeader {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: var(--space-md) var(--space-md) var(--space-xs);
+  animation: fadeInUp 260ms ease both;
+}
+.sectionLabel {
+  font-size: var(--font-size-sm); font-weight: 700; color: var(--c-text-muted);
+  text-transform: uppercase; letter-spacing: 0.05em;
+}
+```
+
+**Count suffix** (e.g., "3 gastos"): inline `<span>` inside `.sectionLabel`, same element, with:
+```css
+.sectionCount { font-weight: 400; font-size: 11px; text-transform: none; letter-spacing: 0; opacity: 0.7; }
+```
+
+---
+
+## Cards
+
+All lists use cards — never `<table>`. Every card follows this structure:
+
+```css
+/* Card container */
+.card {
+  background: var(--c-bg);
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius);  /* 8px */
+  animation: fadeInUp 280ms ease both;
+  animation-delay: calc(var(--i, 0) * 60ms);
+}
+
+/* Card main row */
+.cardTop {
+  display: flex; align-items: center;
+  padding: var(--space-sm) var(--space-md);
+  gap: var(--space-sm);
+}
+
+/* Card title — expands to fill available space */
+.cardName { flex: 1; font-weight: 700; font-size: var(--font-size-md); }
+
+/* Card amount — right-aligned, semantic color */
+.cardAmount { font-size: var(--font-size-sm); font-weight: 600; }
+.cardAmountEarn  { color: var(--c-earn); }
+.cardAmountSpend { color: var(--c-spend); }
+
+/* Card secondary row — badges, date, notes */
+.cardSub {
+  display: flex; gap: var(--space-sm);
+  padding: 0 var(--space-md) var(--space-sm);
+  font-size: var(--font-size-sm); color: var(--c-text-muted);
+  flex-wrap: wrap;
+}
+```
+
+**Tappable card** (entire row opens a detail sheet): add `cursor: pointer; -webkit-tap-highlight-color: transparent; role="button" tabIndex={0}` to the card div.
+
+**Never** use `overflow: hidden` on a tappable card that previously contained a DotsMenu — only add it when the card contains a background-fill element with no dropdown menus.
+
+---
+
+## Chips (inline category/type badges)
+
+Small status badges that appear inside `.cardSub`:
+
+```css
+.chip {
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 11px;
+  background: var(--c-info);  /* light blue — income / neutral */
+  color: var(--c-hdr);
+  font-weight: 600;
+}
+.chipGastos { background: var(--c-spend-bg); color: var(--c-spend); }  /* pink — expense */
+```
+
+- Use `var(--c-info)` background for income-related and neutral chips.
+- Use `var(--c-spend-bg)` for expense-related chips.
+- Never use red for expense chips — red is error only.
+
+---
+
+## Progress bar — full spec
+
+```css
+.progressWrap { padding: var(--space-sm) var(--space-md) 0; }
+
+.progressBar {
+  position: relative;
+  height: 52px; border-radius: 26px;
+  background: var(--c-border);
+  overflow: hidden;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.progressFillEarn, .progressFillSpend {
+  position: absolute; inset: 0 auto 0 0;
+  border-radius: 26px;
+  transition: width 2s ease-out;  /* 2s — intentionally slow, feels satisfying */
+  display: flex; align-items: center; justify-content: center; overflow: hidden;
+}
+.progressFillEarn  { background: var(--c-earn); }
+.progressFillSpend { background: var(--c-spend); }
+
+/* Label inside fill — only shows if segment ≥ 15% wide */
+.progressFillLabel { color: #fff; font-size: 11px; font-weight: 700; padding: 0 12px; text-shadow: 0 1px 2px rgba(0,0,0,0.3); }
+
+/* Remainder label — only shows if fill < 85% */
+.progressRemainLabel { position: absolute; right: 14px; top: 50%; transform: translateY(-50%); font-size: 11px; font-weight: 700; color: var(--c-text-muted); }
+
+/* Meta row below bar */
+.progressMeta { display: flex; justify-content: space-between; margin-top: 6px; padding: 0 4px; min-height: 16px; }
+.progressMetaConfirm      { font-size: 11px; font-weight: 600; color: var(--c-earn); }
+.progressMetaConfirmSpend { font-size: 11px; font-weight: 600; color: var(--c-spend); }
+.progressMetaExpected     { font-size: 11px; font-weight: 600; color: var(--c-text-muted); margin-left: auto; }
+
+/* Tap hint */
+.progressHint { text-align: center; font-size: 10px; color: var(--c-text-muted); opacity: 0.6; margin: 4px 0 0; pointer-events: none; }
+```
+
+**Logic rules:**
+- Amount inside fill only when `fillPct >= 15` — otherwise label would be clipped.
+- Remainder label only when `fillPct < 85` — otherwise it would overlap the fill.
+- Meta row only shows when `fillPct < 15` OR `fillPct >= 85` (edge cases where bar alone is ambiguous).
+- Confirm meta shown when `fillPct < 15 && confirmed > 0`.
+- Expected meta shown when `fillPct >= 85 && fillPct < 100`.
+
+---
+
+## Count-up animation on hero numbers
+
+Use the `useCountUp(target, duration, delay)` hook for all summary totals and progress totals. Never show a static number that "jumps" to its value.
+
+```ts
+const animConfirmed = useCountUp(totalConfirmed, 750, 300); // 750ms, starts at 300ms
+const animExpected  = useCountUp(totalExpected,  750, 300);
+```
+
+Apply to: progress bar amounts, total cards, dashboard hero numbers, summary sheet values. Do NOT apply to individual card amounts — too noisy when many items render at once.
+
+---
+
+## Source card with background-fill progress
+
+Income source cards use a horizontal background fill to show payment completion ratio visually:
+
+```css
+.sourceCard { position: relative; overflow: hidden; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+.sourceCardFill {
+  position: absolute; top: 0; left: 0; bottom: 0;
+  background: #f0fbf1;  /* very light green — income */
+  transition: width 600ms ease;
+  pointer-events: none; z-index: 0;
+}
+.sourceCardTop { position: relative; z-index: 1; /* content above fill */ }
+```
+
+Width formula: `(confirmedCount / slots.length) * 100%`.
+
+**Counter (X/Y):** show only when partially confirmed (`confirmedCount > 0 && confirmedCount < slots.length`). Never show at 0/N (nothing yet) or N/N (fully done — the fill communicates it).
+
+---
+
+## Toggle pills (form field option selectors)
+
+Used inside modals for choosing between 2–4 mutually-exclusive options (income type, frequency, etc.):
+
+```css
+.toggleRow { display: flex; gap: var(--space-xs); width: 100%; }
+.toggleOption {
+  flex: 1; padding: var(--space-xs) 0;
+  background: var(--c-bg); border: 1px solid var(--c-border); border-radius: var(--radius-sm);
+  font-size: var(--font-size-sm); font-weight: 500; color: var(--c-text-muted);
+  transition: border-color 0.15s, background 0.15s, color 0.15s;
+}
+.toggleOptionActive         { border-color: var(--c-hdr);   background: var(--c-alt);       color: var(--c-hdr);   font-weight: 700; }
+.toggleOptionActiveSpend    { border-color: var(--c-spend);  background: var(--c-spend-bg);  color: var(--c-spend); font-weight: 700; }
+```
+
+Scrollable pill row (for long lists like categories):
+```css
+.toggleRowScroll { display: flex; gap: var(--space-xs); overflow-x: auto; scrollbar-width: none; padding-bottom: 2px; }
+.toggleRowScroll::-webkit-scrollbar { display: none; }
+.toggleOptionAuto { flex: none; padding: var(--space-xs) var(--space-sm); white-space: nowrap; /* same border/bg/color as .toggleOption */ }
+```
+
+---
+
+## Standard page states
+
+Every list section must render exactly one of these three non-data states. No custom wording, no other patterns.
+
+```css
+.loading { padding: var(--space-xl); text-align: center; color: var(--c-text-muted); }
+.error   { padding: var(--space-md); color: var(--c-red-border); background: var(--c-red-bg); border-radius: var(--radius); margin: var(--space-md); }
+.empty   { padding: var(--space-xl); text-align: center; color: var(--c-text-muted); font-size: var(--font-size-sm); }
+```
+
+Text conventions:
+- Loading: `"Cargando..."`
+- Error: raw error string from hook
+- Empty (no data): context-specific short sentence (`"Sin fuentes configuradas."`, `"Sin gastos este mes."`)
+- Empty (filtered, no match): indicate filter is active (`"Sin gastos con estos filtros."`)
+
+---
+
+## Bottom sheet anatomy
+
+Every bottom sheet in the app follows the same structure:
+
+```
+┌─────────────────────────────────┐  ← border-radius: 16px 16px 0 0
+│  Header (title + optional sub)  │  ← padding: 16px 16px 8px; border-bottom: 1px solid border
+│─────────────────────────────────│
+│  Body content (scrollable)      │  ← flex: 1; overflow-y: auto
+│─────────────────────────────────│
+│  Action rows (52px each)        │  ← full-width; see "Sheet action rows"
+│─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ │  ← 4px solid var(--c-surface) before cancel/danger group
+│  Cancel (52px, centered)        │
+└─────────────────────────────────┘
+```
+
+```css
+.detailSheet {
+  position: fixed; left: 0; right: 0; bottom: 0;
+  background: var(--c-bg); border-radius: 16px 16px 0 0;
+  z-index: 201; padding-bottom: env(safe-area-inset-bottom, 16px);
+  animation: detailSheetIn 250ms ease forwards;
+  max-height: 80vh; overflow-y: auto;
+}
+.detailSheetClosing { animation: detailSheetOut 300ms ease forwards; pointer-events: none; }
+
+@keyframes detailSheetIn  { from { transform: translateY(100%); } to { transform: translateY(0); } }
+@keyframes detailSheetOut { from { transform: translateY(0); } to { transform: translateY(100%); } }
+
+.detailHeader { padding: var(--space-md) var(--space-md) var(--space-sm); border-bottom: 1px solid var(--c-border); }
+.detailTitle  { display: block; font-size: var(--font-size-lg); font-weight: 700; color: var(--c-hdr); }
+.detailSub    { display: block; font-size: var(--font-size-sm); color: var(--c-text-muted); margin-top: 2px; }
+```
+
+**Content reveal:** all content inside the sheet is wrapped in a single `.detailBody` div. JS adds `.detailRevealed` after 260ms (10ms past the 250ms slide-in). Uses `transition`, never `animation`.
+
+```css
+.detailBody    { opacity: 0; transform: translateY(6px); transition: opacity 240ms ease, transform 240ms ease; }
+.detailRevealed { opacity: 1; transform: translateY(0); }
+```
+
+**Backdrop:** `z-index: 200`, `background: rgba(0,0,0,0.4)`, 220ms fade-in / 300ms fade-out.
+
+---
+
+## Sheet footer — two-button row (Edit + Cancel)
+
+When a sheet's primary action is "edit this item" (not a menu of many actions), use a two-button footer:
+
+```css
+.detailFooter {
+  display: flex; gap: var(--space-sm); padding: var(--space-md);
+  border-top: 4px solid var(--c-surface);
+  margin-top: var(--space-sm);
+}
+.detailEditBtn {
+  flex: 1; display: flex; align-items: center; justify-content: center; gap: var(--space-xs);
+  padding: var(--space-sm) 0; background: none;
+  border: 1px solid var(--c-hdr); border-radius: var(--radius-sm);
+  font-size: var(--font-size-sm); font-weight: 600; color: var(--c-hdr);
+}
+.detailEditBtn .material-symbols-outlined { font-size: 16px; }
+.detailCancelBtn {
+  flex: 1; padding: var(--space-sm) 0; background: none;
+  border: 1px solid var(--c-border); border-radius: var(--radius-sm);
+  font-size: var(--font-size-sm); font-weight: 600; color: var(--c-text-muted);
+}
+```
+
+Note: these use `var(--radius-sm)` (4px) — NOT `var(--radius)` (8px). Sheet footer buttons are compact.
+
+---
+
+## Date quick chips (3-chip pattern)
+
+Compact date selection used in expense / income add modals before the full DateTimePicker is needed:
+
+```css
+.dateChips { display: flex; gap: var(--space-xs); flex-wrap: wrap; }
+.dateChip {
+  padding: 8px var(--space-sm);
+  border: 1px solid var(--c-border); border-radius: 20px;
+  background: var(--c-bg); font-size: var(--font-size-sm); color: var(--c-text);
+  transition: border-color 0.15s, background 0.15s;
+}
+.dateChipActive { border-color: var(--c-hdr); background: var(--c-alt); color: var(--c-hdr); font-weight: 600; }
+.dateChipOther  { border: none; background: none; font-size: var(--font-size-sm); color: var(--c-text-muted); text-decoration: underline; text-underline-offset: 3px; }
+```
+
+"Otra fecha" is a text link — no pill, no border, just underlined muted text.
+
+---
+
+## Summary insight box
+
+Used in summary sheets to show a key takeaway (income insight, expense insight):
+
+```css
+.summaryInsight {
+  margin: var(--space-md);
+  padding: var(--space-sm) var(--space-md);
+  background: var(--c-earn-bg); border-radius: var(--radius);
+  font-size: var(--font-size-sm); color: var(--c-earn); font-weight: 500; line-height: 1.5;
+}
+.summaryInsightSpend { background: var(--c-spend-bg); color: var(--c-spend); }
+```
+
+One insight box per summary sheet. No icon. Content is a short sentence generated from the user's actual data.
+
+---
+
+## Comparison mini-bars (summary sheet)
+
+Thin 6px bars used to compare current vs previous month spending per category:
+
+```css
+.summaryBarTrack { position: relative; height: 6px; background: var(--c-border); border-radius: 3px; overflow: hidden; }
+.summaryBarFillCurrent  { position: absolute; inset: 0 auto 0 0; background: var(--c-spend); border-radius: 3px; transition: width 800ms ease-out; }
+.summaryBarFillPrevious { position: absolute; inset: 0 auto 0 0; background: rgba(194, 24, 91, 0.28); border-radius: 3px; transition: width 800ms ease-out; }
+```
+
+Section title above comparison rows: `font-size: 11px; font-weight: 700; color: var(--c-text-muted); text-transform: uppercase; letter-spacing: 0.05em`.
+
+Delta badges: `font-size: 11px; font-weight: 700`. Colors: up = `var(--c-spend)`, down = `var(--c-earn)`, neutral = `var(--c-text-muted)`.
+
+---
+
+## Inline filter panel (collapsible)
+
+The Gastos filter uses an inline panel that expands/collapses — no modal, no bottom sheet. The expand/collapse uses the CSS grid row trick:
+
+```css
+.filterPanel { display: grid; grid-template-rows: 0fr; transition: grid-template-rows 280ms ease; }
+.filterPanelOpen { grid-template-rows: 1fr; border-bottom: 1px solid var(--c-border); }
+.filterPanelInner { overflow: hidden; }
+```
+
+**Filter icon state**: when filters are active AND the panel is closed, show a small red dot on the filter icon:
+```css
+.filterDot { position: absolute; top: 3px; right: 3px; width: 6px; height: 6px; border-radius: 50%; background: var(--c-spend); }
+```
+
+Filter icon button: 28×28px, no border, `color: var(--c-text-muted)`. Active: `color: var(--c-spend)`.
+
+**Selected filter chips** show as name chips INSIDE the filter question row (not as a count). Example: showing "Alimentacion · Casa" under the category question.
+
+---
+
+## Category picker keyboard (ExpenseSrcPickerKeyboard)
+
+The reusable picker for selecting a category or classification from a list with search + add-new. Located at `features/transactions/components/ExpenseSrcPickerKeyboard.tsx`.
+
+**When to use:** any time the user selects a value from a list that:
+- Has > 5 items (scrolling is needed), OR
+- Needs a search bar, OR
+- Allows adding new options
+
+**Never use** a `<select>` or a static pill grid for these lists.
+
+**Structure:**
+- Backdrop at z-index 200, sheet at z-index 201 (above the modal overlay)
+- Header: back arrow + title + add-new toggle (`add` / `close` icon)
+- Optional add-new input row (native `<input>`, autofocus, `maxLength={100}`, Agregar button)
+- Optional search row (search icon + input + clear button)
+- Pills grid (flex-wrap) — active pill has solid fill in semantic color
+
+**Props:** `mode: 'category' | 'classification'`, `options: string[]`, `selected: string`, `onSelect: (v) => void`, `onAddNew: (v) => void`, `onClose: () => void`
+
+**Ghost-click rule:** in `onSelect`, only call `onSelect(value)` — do NOT call `setPickerOpen(false)` or any close logic. The component's own close animation calls `onClose()` after 300ms. The parent must only set state in `onClose`.
+
+---
+
+## Slot detail items
+
+Used in SourceDetailSheet to show individual payment slots:
+
+```css
+.detailSlot {
+  display: flex; align-items: center; padding: var(--space-sm); gap: var(--space-sm);
+  border: 1px solid var(--c-border); border-radius: var(--radius-sm);
+  background: var(--c-surface);
+}
+.detailSlotDone { background: #f0fbf1; border-color: #c8e6c9; }
+.detailSlotLabel { display: block; font-size: var(--font-size-sm); font-weight: 600; color: var(--c-text); }
+.detailSlotDate      { font-size: 11px; color: #4caf50; font-weight: 500; }
+.detailSlotDateSpend { font-size: 11px; color: var(--c-spend); font-weight: 500; }
+.detailSlotCountdown { font-size: 11px; color: var(--c-text-muted); }
+```
+
+**Temporal guard:** Confirmar button only renders when `slot.date <= today`. Future slots show a countdown span instead.
+
+---
+
+## Form modal (Modal.component.tsx) — anatomy
+
+Modal forms use classes from `Modal.module.css`. Never reinvent these classes in feature-specific CSS.
+
+| Element | Class | CSS notes |
+|---|---|---|
+| Field wrapper | `.formField` | `flex-direction: column; gap: 4px; margin-bottom: 16px` |
+| Field label | `.formLabel` | `font-size: 13px; font-weight: 600; color: var(--c-text-muted)` |
+| Text input / select | `.formInput` / `.formSelect` | `padding: 8px; border: 1px solid border; border-radius: 4px; background: var(--c-info); width: 100%` |
+| Two-column row | `.formRow` | `display: flex; gap: 8px` |
+| Action row | `.formActions` | `display: flex; gap: 8px; margin-top: 16px` |
+| Primary button | `.submitBtn` | `flex: 1; background: var(--c-hdr); color: white; border-radius: 8px; font-weight: 600` |
+| Secondary button | `.secondaryBtn` | `flex: 1; background: none; border: 1px solid border; border-radius: 8px` |
+| Hint / warning | `.modalHint` | Left pink border, spend-bg background — use sparingly, only for critical warnings |
+
+**Submit button visibility rule:** wrap in `{condition && <button className={modalStyles.submitBtn}>}` — never use `disabled`. Button renders only when all required fields are filled.
+
+**Conditional fields:** use `.fieldReveal` / `.fieldRevealVisible` grid-row trick (already in `Modal.module.css`) — never `{condition && <field>}`.
+
+---
+
+## Shared CSS extraction (`features/core/styles/shared.module.css`)
+
+The patterns above have been extracted into `features/core/styles/shared.module.css`. Import from there when building new features instead of re-defining:
+
+```ts
+import shared from '@/features/core/styles/shared.module.css';
+```
+
+Available shared classes: `sectionHeader`, `sectionLabel`, `sectionCount`, `sectionAddBtn`, `sectionAddBtnSpend`, `card`, `cardTop`, `cardName`, `cardAmount`, `cardAmountEarn`, `cardAmountSpend`, `cardSub`, `chip`, `chipSpend`, `loading`, `error`, `empty`, `monthNav`, `monthBtn`, `monthLabel`, `sheetAction`, `sheetActionDanger`, `sheetActionCancel`, `sheetSeparator`, `toggleRow`, `toggleOption`, `toggleOptionActive`, `toggleOptionActiveSpend`, `summaryInsight`, `summaryInsightSpend`.

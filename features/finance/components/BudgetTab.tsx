@@ -1,71 +1,67 @@
 'use client';
-import { DotsMenu } from '@/features/core/components/DotsMenu.component';
 import styles from '../styles/Finance.module.css';
-import { fmtMonth, fmtAmt } from '../finance.types';
+import { fmtMonth } from '../finance.types';
+import { MasterBudgetBar } from './MasterBudgetBar';
 import type { FinanceCtx } from '../hooks/useFinance.hook';
 
 export function BudgetTab({ ctx }: { ctx: FinanceCtx }) {
-  const {
-    budgetHook, totalBudget, totalSpent, overallPct,
-    setEditBudgetCat, setEditBudgetAmt,
-    setBudgetDetail, openConfirmPay,
-  } = ctx;
+  const { budgetHook, setAddBudgetOpen, setBolsilloDetail } = ctx;
 
   return (
     <>
       <div className={styles.monthNav}>
-        <button className={styles.monthBtn} onClick={() => budgetHook.setMonthOffset(budgetHook.monthOffset - 1)}>‹</button>
+        <button className={styles.monthBtn}
+          onClick={() => budgetHook.setMonthOffset(budgetHook.monthOffset - 1)}>‹</button>
         <span className={styles.monthLabel}>{fmtMonth(budgetHook.month)}</span>
-        <button className={styles.monthBtn} onClick={() => budgetHook.setMonthOffset(budgetHook.monthOffset + 1)}>›</button>
-      </div>
-
-      <div className={styles.summaryCard}>
-        <div className={styles.summaryRow}>
-          <span className={styles.summaryLabel}>Presupuesto total</span>
-          <span className={styles.summaryValue}>${fmtAmt(totalBudget)}</span>
-        </div>
-        <div className={styles.summaryRow}>
-          <span className={styles.summaryLabel}>Gastado</span>
-          <span className={styles.summaryValue}>${fmtAmt(totalSpent)}</span>
-        </div>
-        <div className={styles.summaryBarWrap}>
-          <div className={styles.summaryBarFill} style={{ width: `${overallPct * 100}%` }}>
-            {overallPct >= 0.25 && <span className={styles.summaryBarLabel}>${totalSpent.toFixed(0)}</span>}
-          </div>
-        </div>
-        <div className={styles.summaryRow}>
-          <span className={styles.summaryLabel}>Disponible</span>
-          <span className={styles.summaryValue}>${fmtAmt(totalBudget - totalSpent)}</span>
-        </div>
+        <button className={styles.monthBtn}
+          onClick={() => budgetHook.setMonthOffset(budgetHook.monthOffset + 1)}>›</button>
       </div>
 
       {budgetHook.loading && <div className={styles.loading}>Cargando...</div>}
       {budgetHook.error   && <div className={styles.error}>{budgetHook.error}</div>}
 
-      <div className={styles.list}>
-        {budgetHook.budgets.map(b => {
+      <MasterBudgetBar ctx={ctx} />
+
+      <div className={styles.bolsillosHeader}>
+        <span className={styles.bolsillosTitle}>Bolsillos</span>
+        <button className={styles.addBtnIcon} onClick={() => setAddBudgetOpen(true)}>
+          <span className="material-symbols-outlined">add</span>
+        </button>
+      </div>
+
+      {!budgetHook.loading && budgetHook.budgets.length === 0 && (
+        <div className={styles.emptyState}>
+          <span className="material-symbols-outlined">category</span>
+          <h3 className={styles.emptyStateTitle}>Sin bolsillos aún</h3>
+          <p className={styles.emptyStateText}>
+            Crea bolsillos para controlar cuánto gastas en cada categoría.
+          </p>
+          <button className={styles.emptyStateCta} onClick={() => setAddBudgetOpen(true)}>
+            <span className="material-symbols-outlined">add</span>
+            Crear primer bolsillo
+          </button>
+        </div>
+      )}
+
+      <div className={budgetHook.budgets.length > 0 ? styles.list : ''}>
+        {budgetHook.budgets.map((b, idx) => {
           const spent  = parseFloat(b.spent_this_month);
           const budget = parseFloat(b.monthly_amount);
           const pct    = budget > 0 ? Math.min(1, spent / budget) : 0;
           return (
-            <div key={b.category} className={styles.card}>
+            <div key={b.category} className={styles.card}
+              onClick={() => setBolsilloDetail(b)}
+              role="button" tabIndex={0}
+              style={{ '--i': idx } as React.CSSProperties}>
               <div className={styles.cardTop}>
                 <span className={styles.cardName}>{b.category}</span>
-                <DotsMenu items={[
-                  { label: 'Editar presupuesto', icon: 'edit', onClick: () => { setEditBudgetCat(b.category); setEditBudgetAmt(b.monthly_amount); } },
-                ]} />
               </div>
-              <div className={styles.miniBarWrap} onClick={() => setBudgetDetail(b)}>
+              <div className={styles.miniBarWrap}>
                 <div className={styles.miniBarFill} style={{ width: `${pct * 100}%` }}>
-                  {pct >= 0.3 && <span className={styles.miniBarLabel}>${spent.toFixed(0)}</span>}
+                  {pct >= 0.15 && <span className={styles.miniBarLabel}>${spent.toFixed(0)}</span>}
                 </div>
               </div>
-              {budget > 0 && spent === 0 && (
-                <button className={styles.confirmPayBtn} onClick={() => openConfirmPay(b.category, b.monthly_amount)}>
-                  <span className="material-symbols-outlined">check_circle</span>
-                  Confirmar pago
-                </button>
-              )}
+              <p className={styles.barHint}>Toca para ver detalles</p>
             </div>
           );
         })}

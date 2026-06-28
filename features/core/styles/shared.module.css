@@ -1,0 +1,322 @@
+/*
+ * shared.module.css — Canonical UI patterns for economy-app
+ *
+ * Import this in new features instead of re-defining these classes:
+ *   import shared from '@/features/core/styles/shared.module.css';
+ *
+ * Source of truth: features/transactions/styles/Transactions.module.css
+ * Rules: economy-app/UI-UX-RULES.md → "Shared CSS extraction"
+ */
+
+/* ── Month navigation bar ── */
+
+.monthNav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-sm) var(--space-md);
+  background: var(--c-surface);
+  border-bottom: 1px solid var(--c-border);
+}
+
+.monthBtn {
+  background: none;
+  border: none;
+  font-size: 22px;
+  cursor: pointer;
+  color: var(--c-hdr);
+  padding: 0 var(--space-sm);
+  line-height: 1;
+}
+
+.monthLabel {
+  font-weight: 600;
+  font-size: var(--font-size-md);
+  text-transform: capitalize;
+}
+
+/* ── Section headers ── */
+
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-md) var(--space-md) var(--space-xs);
+  animation: fadeInUp 260ms ease both;
+}
+
+.sectionLabel {
+  font-size: var(--font-size-sm);
+  font-weight: 700;
+  color: var(--c-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.sectionCount {
+  font-weight: 400;
+  font-size: 11px;
+  text-transform: none;
+  letter-spacing: 0;
+  opacity: 0.7;
+}
+
+/* Circle add button — beside a section title (28×28px) */
+.sectionAddBtn {
+  background: none;
+  border: 1px solid var(--c-hdr);
+  border-radius: 50%;
+  color: var(--c-hdr);
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 0;
+  flex-shrink: 0;
+}
+
+.sectionAddBtn .material-symbols-outlined { font-size: 16px; }
+
+.sectionAddBtnSpend { border-color: var(--c-spend); color: var(--c-spend); }
+
+/* Circle add button — standalone row (36×36px) */
+.addBtn {
+  background: none;
+  border: 1px solid var(--c-hdr);
+  border-radius: 50%;
+  color: var(--c-hdr);
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 0;
+  flex-shrink: 0;
+}
+
+.addBtn .material-symbols-outlined { font-size: 20px; }
+.addBtnSpend { border-color: var(--c-spend); color: var(--c-spend); }
+
+/* ── Cards ── */
+
+.card {
+  background: var(--c-bg);
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius);
+  animation: fadeInUp 280ms ease both;
+  animation-delay: calc(var(--i, 0) * 60ms);
+}
+
+.cardTop {
+  display: flex;
+  align-items: center;
+  padding: var(--space-sm) var(--space-md);
+  gap: var(--space-sm);
+}
+
+.cardName {
+  flex: 1;
+  font-weight: 700;
+  font-size: var(--font-size-md);
+}
+
+.cardAmount {
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+}
+
+.cardAmountEarn  { color: var(--c-earn); }
+.cardAmountSpend { color: var(--c-spend); }
+
+.cardSub {
+  display: flex;
+  gap: var(--space-sm);
+  padding: 0 var(--space-md) var(--space-sm);
+  font-size: var(--font-size-sm);
+  color: var(--c-text-muted);
+  flex-wrap: wrap;
+}
+
+/* Tappable card — apply alongside .card */
+.cardTappable {
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* ── Chips (inline badges inside cardSub) ── */
+
+.chip {
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 11px;
+  background: var(--c-info);
+  color: var(--c-hdr);
+  font-weight: 600;
+}
+
+.chipSpend { background: var(--c-spend-bg); color: var(--c-spend); }
+.chipEarn  { background: var(--c-earn-bg);  color: var(--c-earn);  }
+.chipSave  { background: var(--c-save-bg);  color: var(--c-save);  }
+
+/* ── Standard page states ── */
+
+.loading {
+  padding: var(--space-xl);
+  text-align: center;
+  color: var(--c-text-muted);
+}
+
+.error {
+  padding: var(--space-md);
+  color: var(--c-red-border);
+  background: var(--c-red-bg);
+  border-radius: var(--radius);
+  margin: var(--space-md);
+}
+
+.empty {
+  padding: var(--space-xl);
+  text-align: center;
+  color: var(--c-text-muted);
+  font-size: var(--font-size-sm);
+}
+
+/* ── Sheet action rows (52px, full-width) ── */
+
+.sheetAction {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  width: 100%;
+  height: 52px;
+  padding: 0 var(--space-md);
+  background: none;
+  border: none;
+  font-size: var(--font-size-md);
+  font-weight: 500;
+  color: var(--c-text);
+  cursor: pointer;
+  text-align: left;
+}
+
+.sheetAction .material-symbols-outlined { font-size: 22px; color: var(--c-text-muted); }
+
+.sheetActionDanger { color: var(--c-red-border); }
+.sheetActionDanger .material-symbols-outlined { color: var(--c-red-border); }
+
+/* Cancel row — centered, thick separator above */
+.sheetActionCancel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 52px;
+  background: none;
+  border: none;
+  border-top: 4px solid var(--c-surface);
+  font-size: var(--font-size-md);
+  font-weight: 600;
+  color: var(--c-text-muted);
+  cursor: pointer;
+}
+
+/* Thick divider between action groups */
+.sheetSeparator {
+  height: 4px;
+  background: var(--c-surface);
+  width: 100%;
+}
+
+/* ── Toggle pills (form field option selectors) ── */
+
+.toggleRow {
+  display: flex;
+  gap: var(--space-xs);
+  width: 100%;
+}
+
+.toggleOption {
+  flex: 1;
+  padding: var(--space-xs) 0;
+  background: var(--c-bg);
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  color: var(--c-text-muted);
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s, color 0.15s;
+}
+
+.toggleOptionActive {
+  border-color: var(--c-hdr);
+  background: var(--c-alt);
+  color: var(--c-hdr);
+  font-weight: 700;
+}
+
+.toggleOptionActiveSpend {
+  border-color: var(--c-spend);
+  background: var(--c-spend-bg);
+  color: var(--c-spend);
+  font-weight: 700;
+}
+
+.toggleOptionActiveEarn {
+  border-color: var(--c-earn);
+  background: var(--c-earn-bg);
+  color: var(--c-earn);
+  font-weight: 700;
+}
+
+/* Scrollable pill row — for long option lists */
+.toggleRowScroll {
+  display: flex;
+  gap: var(--space-xs);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  padding-bottom: 2px;
+}
+
+.toggleRowScroll::-webkit-scrollbar { display: none; }
+
+.toggleOptionAuto {
+  flex: none;
+  padding: var(--space-xs) var(--space-sm);
+  white-space: nowrap;
+  background: var(--c-bg);
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  color: var(--c-text-muted);
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s, color 0.15s;
+}
+
+/* ── Summary insight box ── */
+
+.summaryInsight {
+  margin: var(--space-md);
+  padding: var(--space-sm) var(--space-md);
+  background: var(--c-earn-bg);
+  border-radius: var(--radius);
+  font-size: var(--font-size-sm);
+  color: var(--c-earn);
+  font-weight: 500;
+  line-height: 1.5;
+}
+
+.summaryInsightSpend {
+  background: var(--c-spend-bg);
+  color: var(--c-spend);
+}
+
+.summaryInsightSave {
+  background: var(--c-save-bg);
+  color: var(--c-save);
+}

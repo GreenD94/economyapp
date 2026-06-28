@@ -1,3 +1,10 @@
+export const BUDGET_CATEGORIES = [
+  'Alimentacion', 'Transporte', 'Higiene', 'Salud',
+  'Casa', 'Ocio', 'Imprevistos', 'Caprichos', 'Tecnologia',
+] as const;
+
+export type BudgetCategory = typeof BUDGET_CATEGORIES[number];
+
 export type Tab           = 'budget' | 'networth';
 export type NetworthFilter = 'all' | 'real' | 'projected' | 'meta';
 

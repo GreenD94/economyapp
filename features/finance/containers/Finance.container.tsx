@@ -15,16 +15,20 @@ export function FinanceContainer() {
         <button className={`${styles.tab} ${activeTab === 'budget' ? styles.tabActive : ''}`}
           onClick={() => setActiveTab('budget')}>
           Presupuesto
-          <button className={styles.tabInfo} onClick={e => { e.stopPropagation(); setInfoBudget(true); }}>
+          <span role="button" tabIndex={0} className={styles.tabInfo}
+            onClick={e => { e.stopPropagation(); setInfoBudget(true); }}
+            onKeyDown={e => e.key === 'Enter' && setInfoBudget(true)}>
             <span className="material-symbols-outlined">info</span>
-          </button>
+          </span>
         </button>
         <button className={`${styles.tab} ${activeTab === 'networth' ? styles.tabActive : ''}`}
           onClick={() => setActiveTab('networth')}>
           Patrimonio
-          <button className={styles.tabInfo} onClick={e => { e.stopPropagation(); setInfoNetworth(true); }}>
+          <span role="button" tabIndex={0} className={styles.tabInfo}
+            onClick={e => { e.stopPropagation(); setInfoNetworth(true); }}
+            onKeyDown={e => e.key === 'Enter' && setInfoNetworth(true)}>
             <span className="material-symbols-outlined">info</span>
-          </button>
+          </span>
         </button>
       </div>
 

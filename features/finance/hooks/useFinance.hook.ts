@@ -8,25 +8,34 @@ export function useFinance() {
   const budgetHook   = useBudget();
   const networthHook = useNetWorth();
 
-  const [activeTab,        setActiveTab]        = useState<Tab>('budget');
-  const [editBudgetCat,    setEditBudgetCat]    = useState<string | null>(null);
-  const [editBudgetAmt,    setEditBudgetAmt]    = useState('');
-  const [confirmPayCat,    setConfirmPayCat]    = useState<string | null>(null);
-  const [confirmPayAmt,    setConfirmPayAmt]    = useState('');
-  const [confirmPayDate,   setConfirmPayDate]   = useState('');
-  const [budgetDetail,     setBudgetDetail]     = useState<typeof budgetHook.budgets[0] | null>(null);
-  const [addNetworthOpen,  setAddNetworthOpen]  = useState(false);
-  const [addNetworthForm,  setAddNetworthForm]  = useState({ month: firstOfMonth(), amount: '', notes: '' });
-  const [editNetworth,     setEditNetworth]     = useState<{ id: number; month: string; amount: string; notes: string } | null>(null);
-  const [confirm,          setConfirm]          = useState<{ msg: string; action: () => void } | null>(null);
-  const [networthFilter,   setNetworthFilter]   = useState<NetworthFilter>('all');
+  const [activeTab,          setActiveTab]          = useState<Tab>('budget');
+  const [editBudgetCat,      setEditBudgetCat]      = useState<string | null>(null);
+  const [editBudgetAmt,      setEditBudgetAmt]      = useState('');
+  const [confirmPayCat,      setConfirmPayCat]      = useState<string | null>(null);
+  const [confirmPayAmt,      setConfirmPayAmt]      = useState('');
+  const [confirmPayDate,     setConfirmPayDate]     = useState('');
+  const [bolsilloDetail,     setBolsilloDetail]     = useState<typeof budgetHook.budgets[0] | null>(null);
+  const [addNetworthOpen,    setAddNetworthOpen]    = useState(false);
+  const [addNetworthForm,    setAddNetworthForm]    = useState({ month: firstOfMonth().slice(0, 7), amount: '', notes: '' });
+  const [editNetworth,       setEditNetworth]       = useState<{ id: number; month: string; amount: string; notes: string } | null>(null);
+  const [confirm,            setConfirm]            = useState<{ msg: string; action: () => void } | null>(null);
+  const [networthFilter,     setNetworthFilter]     = useState<NetworthFilter>('all');
   const [showNetworthFilter, setShowNetworthFilter] = useState(false);
-  const [infoBudget,       setInfoBudget]       = useState(false);
-  const [infoNetworth,     setInfoNetworth]     = useState(false);
+  const [addBudgetOpen,      setAddBudgetOpen]      = useState(false);
+  const [addBudgetCat,       setAddBudgetCat]       = useState<string>('');
+  const [addBudgetAmt,       setAddBudgetAmt]       = useState('');
+  const [infoBudget,         setInfoBudget]         = useState(false);
+  const [infoNetworth,       setInfoNetworth]       = useState(false);
 
-  const totalBudget = budgetHook.budgets.reduce((s, b) => s + parseFloat(b.monthly_amount), 0);
-  const totalSpent  = budgetHook.budgets.reduce((s, b) => s + parseFloat(b.spent_this_month), 0);
-  const overallPct  = totalBudget > 0 ? Math.min(1, totalSpent / totalBudget) : 0;
+  // Savings projection
+  const actualEntries = networthHook.entries.filter(e => e.is_actual);
+  const currentSaved  = actualEntries.length > 0
+    ? parseFloat(actualEntries[actualEntries.length - 1].amount) : 0;
+  const avgMonthlySavings = actualEntries.length >= 2
+    ? (parseFloat(actualEntries[actualEntries.length - 1].amount) - parseFloat(actualEntries[0].amount)) / (actualEntries.length - 1)
+    : budgetHook.monthlySavingsTarget;
+  const monthsRemaining = (avgMonthlySavings > 0 && budgetHook.goalAmount > currentSaved)
+    ? Math.ceil((budgetHook.goalAmount - currentSaved) / avgMonthlySavings) : null;
 
   const filteredEntries = networthHook.entries.filter(e => {
     if (networthFilter === 'all')       return true;
@@ -44,6 +53,11 @@ export function useFinance() {
     await budgetHook.confirmPayment(confirmPayCat, parseFloat(confirmPayAmt), confirmPayDate);
     setConfirmPayCat(null);
   }
+  async function submitAddBudget() {
+    if (!addBudgetCat || !addBudgetAmt) return;
+    await budgetHook.createBudget(addBudgetCat, parseFloat(addBudgetAmt));
+    setAddBudgetOpen(false); setAddBudgetCat(''); setAddBudgetAmt('');
+  }
   async function submitEditBudget() {
     if (!editBudgetCat || !editBudgetAmt) return;
     await budgetHook.updateBudget(editBudgetCat, parseFloat(editBudgetAmt));
@@ -52,7 +66,7 @@ export function useFinance() {
   async function submitAddNetworth() {
     if (!addNetworthForm.amount) return;
     await networthHook.addEntry({ month: addNetworthForm.month, amount: parseFloat(addNetworthForm.amount), notes: addNetworthForm.notes || undefined });
-    setAddNetworthForm({ month: firstOfMonth(), amount: '', notes: '' });
+    setAddNetworthForm({ month: firstOfMonth().slice(0, 7), amount: '', notes: '' });
     setAddNetworthOpen(false);
   }
   async function submitEditNetworth() {
@@ -66,13 +80,19 @@ export function useFinance() {
     activeTab, setActiveTab,
     editBudgetCat, setEditBudgetCat, editBudgetAmt, setEditBudgetAmt,
     confirmPayCat, setConfirmPayCat, confirmPayAmt, setConfirmPayAmt, confirmPayDate, setConfirmPayDate,
-    budgetDetail, setBudgetDetail,
+    addBudgetOpen, setAddBudgetOpen, addBudgetCat, setAddBudgetCat, addBudgetAmt, setAddBudgetAmt, submitAddBudget,
+    createBudget: budgetHook.createBudget, deleteBudget: budgetHook.deleteBudget,
+    bolsilloDetail, setBolsilloDetail,
     addNetworthOpen, setAddNetworthOpen, addNetworthForm, setAddNetworthForm,
     editNetworth, setEditNetworth,
     confirm, setConfirm,
     networthFilter, setNetworthFilter, showNetworthFilter, setShowNetworthFilter,
     infoBudget, setInfoBudget, infoNetworth, setInfoNetworth,
-    totalBudget, totalSpent, overallPct, filteredEntries,
+    filteredEntries,
+    spendingCap:       budgetHook.spendingCap,
+    totalRealExpenses: budgetHook.totalRealExpenses,
+    surplusSavings:    budgetHook.surplusSavings,
+    currentSaved, monthsRemaining, goalAmount: budgetHook.goalAmount,
     openConfirmPay, submitConfirmPay, submitEditBudget, submitAddNetworth, submitEditNetworth,
   };
 }

@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { ExpenseDetailSheet } from './ExpenseDetailSheet';
 import { ExpenseSourceDetailSheet } from './ExpenseSourceDetailSheet';
 import { ExpenseFilterKeyboard } from './ExpenseFilterKeyboard';
+import { ExpenseSummarySheet } from './ExpenseSummarySheet';
 import { FrequentExpensesSection } from './FrequentExpensesSection';
 import { useCountUp } from '../hooks/useCountUp.hook';
 import styles from '../styles/Transactions.module.css';
@@ -19,11 +20,13 @@ export function ExpensesTab({ ctx }: { ctx: TransactionCtx }) {
     expenseDetail, setExpenseDetail,
   } = ctx;
   const { categoryFilters, setCategoryFilters, typeFilters, setTypeFilters } = expenseHook;
-  const [filterOpen, setFilterOpen] = useState(false);
-  const [pickerMode, setPickerMode] = useState<'category' | 'type' | null>(null);
+  const [filterOpen,   setFilterOpen]   = useState(false);
+  const [pickerMode,   setPickerMode]   = useState<'category' | 'type' | null>(null);
+  const [summaryOpen,  setSummaryOpen]  = useState(false);
 
   const animExpected  = useCountUp(totalExpectedExpenses,  750, 300);
   const animConfirmed = useCountUp(totalConfirmedExpenses, 750, 300);
+  const fillPct = totalExpectedExpenses > 0 ? Math.min(100, (totalConfirmedExpenses / totalExpectedExpenses) * 100) : 0;
   const hasFilter     = categoryFilters.length > 0 || typeFilters.length > 0;
   const allManualCount = expenseHook.allExpenses.filter(e => e.source_id === null).length;
   const manualLabel   = hasFilter
@@ -43,17 +46,31 @@ export function ExpensesTab({ ctx }: { ctx: TransactionCtx }) {
       </div>
 
       <div key={expenseHook.month}>
-        <div className={styles.summaryRow}>
-          <div className={styles.summaryItem}>
-            <span className={styles.summaryLabel}>Esperado</span>
-            <span className={styles.summaryValue}>${fmtAmt(animExpected)}</span>
+        {totalExpectedExpenses > 0 && (
+          <div className={styles.progressWrap}>
+            <div className={styles.progressBar} onClick={() => setSummaryOpen(true)} role="button" tabIndex={0}>
+              <div className={styles.progressFillSpend} style={{ width: `${fillPct}%` }}>
+                {fillPct >= 15 && (
+                  <span className={styles.progressFillLabel}>${fmtAmt(animConfirmed)}</span>
+                )}
+              </div>
+              {fillPct < 85 && (
+                <span className={styles.progressRemainLabel}>${fmtAmt(animExpected)}</span>
+              )}
+            </div>
+            {(fillPct < 15 || fillPct >= 85) && (
+              <div className={styles.progressMeta}>
+                {fillPct < 15 && animConfirmed > 0 && (
+                  <span className={styles.progressMetaConfirmSpend}>Pagado · ${fmtAmt(animConfirmed)}</span>
+                )}
+                {fillPct >= 85 && fillPct < 100 && (
+                  <span className={styles.progressMetaExpected}>Esperado · ${fmtAmt(animExpected)}</span>
+                )}
+              </div>
+            )}
+            <p className={styles.progressHint}>Toca para ver detalles</p>
           </div>
-          <div className={styles.summaryDivider} />
-          <div className={styles.summaryItem}>
-            <span className={styles.summaryLabel}>Pagado</span>
-            <span className={`${styles.summaryValue} ${styles.summaryValueSpend}`}>${fmtAmt(animConfirmed)}</span>
-          </div>
-        </div>
+        )}
 
         {/* Gastos frecuentes */}
         <FrequentExpensesSection ctx={ctx} />
@@ -142,6 +159,9 @@ export function ExpensesTab({ ctx }: { ctx: TransactionCtx }) {
           onToggleCat={toggleCat} onToggleType={toggleType} onClose={() => setPickerMode(null)} />
       )}
 
+      {summaryOpen && (
+        <ExpenseSummarySheet month={expenseHook.month} onClose={() => setSummaryOpen(false)} />
+      )}
       {expenseSourceDetail && (
         <ExpenseSourceDetailSheet src={expenseSourceDetail} ctx={ctx} onClose={() => setExpenseSourceDetail(null)} />
       )}

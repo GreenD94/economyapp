@@ -1,6 +1,8 @@
 'use client';
+import { useState } from 'react';
 import { SourceDetailSheet } from './SourceDetailSheet';
 import { IncomeDetailSheet } from './IncomeDetailSheet';
+import { IncomeSummarySheet } from './IncomeSummarySheet';
 import { getExpectedSlots } from '../transactions.utils';
 import { useCountUp } from '../hooks/useCountUp.hook';
 import styles from '../styles/Transactions.module.css';
@@ -14,8 +16,10 @@ export function IncomesTab({ ctx }: { ctx: TransactionCtx }) {
     sourceDetail, setSourceDetail,
     incomeDetail, setIncomeDetail } = ctx;
 
+  const [summaryOpen, setSummaryOpen] = useState(false);
   const animExpected  = useCountUp(totalExpected,  750, 300);
   const animConfirmed = useCountUp(totalConfirmed, 750, 300);
+  const fillPct = totalExpected > 0 ? Math.min(100, (totalConfirmed / totalExpected) * 100) : 0;
 
   return (
     <>
@@ -26,17 +30,31 @@ export function IncomesTab({ ctx }: { ctx: TransactionCtx }) {
       </div>
 
       <div key={incomeHook.month}>
-        <div className={styles.summaryRow}>
-          <div className={styles.summaryItem}>
-            <span className={styles.summaryLabel}>Esperado</span>
-            <span className={styles.summaryValue}>${fmtAmt(animExpected)}</span>
+        {totalExpected > 0 && (
+          <div className={styles.progressWrap}>
+            <div className={styles.progressBar} onClick={() => setSummaryOpen(true)} role="button" tabIndex={0}>
+              <div className={styles.progressFillEarn} style={{ width: `${fillPct}%` }}>
+                {fillPct >= 15 && (
+                  <span className={styles.progressFillLabel}>${fmtAmt(animConfirmed)}</span>
+                )}
+              </div>
+              {fillPct < 85 && (
+                <span className={styles.progressRemainLabel}>${fmtAmt(animExpected)}</span>
+              )}
+            </div>
+            {(fillPct < 15 || fillPct >= 85) && (
+              <div className={styles.progressMeta}>
+                {fillPct < 15 && animConfirmed > 0 && (
+                  <span className={styles.progressMetaConfirm}>Confirmado · ${fmtAmt(animConfirmed)}</span>
+                )}
+                {fillPct >= 85 && fillPct < 100 && (
+                  <span className={styles.progressMetaExpected}>Esperado · ${fmtAmt(animExpected)}</span>
+                )}
+              </div>
+            )}
+            <p className={styles.progressHint}>Toca para ver detalles</p>
           </div>
-          <div className={styles.summaryDivider} />
-          <div className={styles.summaryItem}>
-            <span className={styles.summaryLabel}>Confirmado</span>
-            <span className={`${styles.summaryValue} ${styles.summaryValueEarn}`}>${fmtAmt(animConfirmed)}</span>
-          </div>
-        </div>
+        )}
 
         {incomeHook.loading && <div className={styles.loading}>Cargando...</div>}
         {incomeHook.error   && <div className={styles.error}>{incomeHook.error}</div>}
@@ -111,6 +129,9 @@ export function IncomesTab({ ctx }: { ctx: TransactionCtx }) {
         </div>
       </div>
 
+      {summaryOpen && (
+        <IncomeSummarySheet month={incomeHook.month} onClose={() => setSummaryOpen(false)} />
+      )}
       {sourceDetail && (
         <SourceDetailSheet src={sourceDetail} ctx={ctx} onClose={() => setSourceDetail(null)} />
       )}

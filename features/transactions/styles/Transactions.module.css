@@ -192,29 +192,234 @@
   text-underline-offset: 3px;
 }
 
-/* ── Income summary row ── */
-.summaryRow {
-  display: flex;
-  align-items: stretch;
-  margin: var(--space-sm) var(--space-md) 0;
-  border: 1px solid var(--c-border);
-  border-radius: var(--radius);
-  background: var(--c-surface);
-  overflow: hidden;
-  animation: fadeInUp 300ms ease both;
+/* ── Confirmado / Esperado progress bar ── */
+.progressWrap {
+  padding: var(--space-sm) var(--space-md) 0;
 }
 
-.summaryItem {
-  flex: 1;
+.progressBar {
+  position: relative;
+  height: 52px;
+  border-radius: 26px;
+  background: var(--c-border);
+  overflow: hidden;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.progressFillEarn {
+  position: absolute;
+  inset: 0 auto 0 0;
+  background: var(--c-earn);
+  border-radius: 26px;
+  transition: width 2s ease-out;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.progressFillSpend {
+  position: absolute;
+  inset: 0 auto 0 0;
+  background: var(--c-spend);
+  border-radius: 26px;
+  transition: width 2s ease-out;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.progressFillLabel {
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  white-space: nowrap;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+  padding: 0 12px;
+}
+
+.progressRemainLabel {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--c-text-muted);
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.progressMeta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 6px;
+  padding: 0 4px;
+  min-height: 16px;
+}
+
+.progressMetaConfirm {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--c-earn);
+}
+
+.progressMetaConfirmSpend {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--c-spend);
+}
+
+.progressMetaExpected {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--c-text-muted);
+  margin-left: auto;
+}
+
+.progressHint {
+  text-align: center;
+  font-size: 10px;
+  color: var(--c-text-muted);
+  opacity: 0.6;
+  margin: 4px 0 0;
+  pointer-events: none;
+}
+
+/* ── Month summary sheets (insight + comparison) ── */
+.summaryInsight {
+  margin: var(--space-md);
+  padding: var(--space-sm) var(--space-md);
+  background: var(--c-earn-bg);
+  border-radius: var(--radius);
+  font-size: var(--font-size-sm);
+  color: var(--c-earn);
+  font-weight: 500;
+  line-height: 1.5;
+}
+
+.summaryInsightSpend {
+  background: var(--c-spend-bg);
+  color: var(--c-spend);
+}
+
+.summaryCompSection {
+  padding: var(--space-xs) var(--space-md) 0;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--c-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.summaryDeltaRow {
   display: flex;
   flex-direction: column;
-  align-items: center;
+  gap: 6px;
   padding: var(--space-sm) var(--space-md);
-  gap: 2px;
+  border-bottom: 1px solid var(--c-border);
 }
 
-.summaryDivider { width: 1px; background: var(--c-border); flex-shrink: 0; }
+.summaryDeltaTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
 
+.summaryDeltaCategory {
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  color: var(--c-text);
+}
+
+.summaryDeltaRight {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  flex-shrink: 0;
+}
+
+.summaryDeltaAmount {
+  font-size: var(--font-size-sm);
+  font-weight: 700;
+  color: var(--c-spend);
+}
+
+.summaryBarGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.summaryBarTrack {
+  position: relative;
+  height: 6px;
+  background: var(--c-border);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.summaryBarFillCurrent {
+  position: absolute;
+  inset: 0 auto 0 0;
+  background: var(--c-spend);
+  border-radius: 3px;
+  transition: width 800ms ease-out;
+}
+
+.summaryBarFillPrevious {
+  position: absolute;
+  inset: 0 auto 0 0;
+  background: rgba(194, 24, 91, 0.28);
+  border-radius: 3px;
+  transition: width 800ms ease-out;
+}
+
+.summaryDeltaUp {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--c-spend);
+}
+
+.summaryDeltaDown {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--c-earn);
+}
+
+.summaryDeltaMuted {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--c-text-muted);
+}
+
+.summarySheetHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-md) var(--space-md) var(--space-sm);
+  border-bottom: 1px solid var(--c-border);
+}
+
+.summaryExportIconBtn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--c-text-muted);
+  display: flex;
+  align-items: center;
+  padding: 4px;
+  flex-shrink: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+.summaryExportIconBtn .material-symbols-outlined { font-size: 24px; }
+.summaryExportIconBtn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+/* Legacy summary classes kept for reference — no longer rendered */
 .summaryLabel { font-size: var(--font-size-xs, 11px); color: var(--c-text-muted); font-weight: 500; text-transform: uppercase; letter-spacing: 0.05em; }
 .summaryValue { font-size: var(--font-size-md); font-weight: 700; color: var(--c-text); }
 .summaryValueEarn { color: var(--c-earn); }
@@ -1139,3 +1344,21 @@
   white-space: nowrap;
 }
 .pickerAddConfirm:disabled { opacity: 0.4; cursor: not-allowed; }
+
+/* ── Guidance banner (always visible, non-dismissible) ── */
+.guidanceBanner {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin: var(--space-sm) var(--space-md) 0;
+  padding: var(--space-sm) var(--space-md);
+  background: var(--c-surface);
+  border: 1px solid var(--c-border);
+  border-left: 3px solid var(--c-spend);
+  border-radius: var(--radius-sm);
+  font-size: 12px;
+  color: var(--c-text-muted);
+  line-height: 1.5;
+}
+.guidanceBanner .material-symbols-outlined { font-size: 14px; flex-shrink: 0; margin-top: 1px; color: var(--c-spend); }
+.guidanceBanner strong { color: var(--c-text); }

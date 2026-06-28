@@ -1,47 +1,10 @@
-import type { GlossaryTerm } from '@/features/core/components/InfoModal.component';
+import { GLOSSARY_BASE } from './info.glossary';
 
 export type InfoEntry = {
   title: string;
   howItWorks: string[];
-  glossary: GlossaryTerm[];
+  glossary: { term: string; definition: string }[];
 };
-
-const GLOSSARY_BASE: GlossaryTerm[] = [
-  { term: 'Ahorro', definition: 'Dinero que guardas en lugar de gastar. Tu ahorro mensual es $2,000 — lo primero que separas cuando cobras.' },
-  { term: 'Ahorro mensual objetivo', definition: 'La cantidad que decides ahorrar cada mes para llegar a tu meta. En tu caso: $2,000.' },
-  { term: 'Calidad de vida', definition: 'Tipo de gasto que mejora tu comodidad o bienestar, pero no es urgente. Ejemplo: una almohada mejor.' },
-  { term: 'Capricho', definition: 'Gasto impulsivo sin justificación racional. No aporta valor real, solo satisfacción momentánea.' },
-  { term: 'Categoría de gasto', definition: 'Grupo al que pertenece cada gasto. Tus categorías: Alimentación, Higiene, Salud, Casa, Gym, Claude, Ocio, Imprevistos, Caprichos, Tecnología.' },
-  { term: 'Comodidad', definition: 'Qué tanto mejora algo tu vida cotidiana en términos de facilidad y confort.' },
-  { term: 'Compra impulsiva', definition: 'Compra no planeada motivada por emoción, no por necesidad o razonamiento.' },
-  { term: 'Costo de oportunidad', definition: 'Lo que renuncias cuando gastas dinero. Si gastas $100 en algo innecesario, renuncias a $100 de ahorro.' },
-  { term: 'Decisor de compras', definition: 'Herramienta que evalúa si una compra vale la pena basándose en precio, impacto y tiempo de espera.' },
-  { term: 'Depreciación hedónica', definition: 'La emoción que sientes al comprar algo nuevo dura poco. Después de días o semanas, la satisfacción cae drásticamente.' },
-  { term: 'Disponible', definition: 'Lo que te queda para gastar libremente después de separar el ahorro y cubrir todos los gastos del mes.' },
-  { term: 'Excedido', definition: 'Cuando gastas más de lo que tenías presupuestado en una categoría.' },
-  { term: 'Flujo de caja', definition: 'El movimiento de dinero que entra (ingresos) y sale (gastos) en un período. Positivo = ganas más de lo que gastas.' },
-  { term: 'Gasto fijo', definition: 'Gasto que se repite igual cada mes. Ejemplo: renta, suscripción, gym.' },
-  { term: 'Gasto variable', definition: 'Gasto que cambia de monto mes a mes. Ejemplo: comida, transporte, entretenimiento.' },
-  { term: 'Ingreso extra', definition: 'Dinero que entra esporádicamente: bonos, freelance, ventas, regalos.' },
-  { term: 'Ingreso fijo', definition: 'Salario o pago que recibes igual cada mes o período. Predecible y confiable.' },
-  { term: 'Ingreso variable', definition: 'Ingreso que cambia según el trabajo realizado o ventas. Ejemplo: comisiones.' },
-  { term: 'Liquidez', definition: 'Dinero disponible de inmediato (efectivo o en cuenta). Alta liquidez = puedes pagar lo que necesitas sin esperar.' },
-  { term: 'Meta financiera', definition: 'Un objetivo monetario concreto con monto y plazo. Tu meta: $15,000 de ahorro.' },
-  { term: 'Necesidad', definition: 'Gasto que no puedes evitar sin afectar tu salud, seguridad o funcionamiento básico.' },
-  { term: 'Patrimonio neto', definition: 'Total de lo que has ahorrado o acumulado hasta ahora. Es tu riqueza real en este momento.' },
-  { term: 'Presupuesto', definition: 'Plan que asigna cuánto puedes gastar en cada categoría antes de que empiece el mes.' },
-  { term: 'Prioridad', definition: 'En la wishlist: Alta = lo necesitas pronto, Media = puedes esperar, Baja = es un deseo.' },
-  { term: 'Productividad', definition: 'Qué tanto te ayuda algo a hacer más o mejor trabajo. Alta productividad = justifica el gasto.' },
-  { term: 'Proyección', definition: 'Cálculo de cuánto tendrás ahorrado en meses futuros, asumiendo que sigues ahorrando $2,000/mes.' },
-  { term: 'Puntaje', definition: 'Número de 0 a 10 que mide si una compra vale la pena. Se calcula con precio, impacto y días de espera.' },
-  { term: 'Regla de las 72 horas', definition: 'Antes de comprar algo entre $20 y $100, espera 3 días. Si sigues queriéndolo, la compra es más racional.' },
-  { term: 'Regla de los 7 días', definition: 'Para compras mayores de $100, espera una semana completa antes de decidir.' },
-  { term: 'Salud financiera', definition: 'Estado general de tus finanzas: ahorras, no debes, tienes plan. Como la salud física, se cuida con hábitos.' },
-  { term: 'Semáforo financiero', definition: 'Sistema de colores (verde/amarillo/rojo) que indica si una compra es prudente ahora mismo.' },
-  { term: 'Valor percibido', definition: 'Lo que crees que vale algo para ti. A veces es mayor que el precio real; otras veces menor.' },
-  { term: 'Wishlist inteligente', definition: 'Lista de cosas que quieres comprar, filtrada por un sistema que te hace esperar antes de decidir.' },
-  { term: 'Zero-based budgeting', definition: 'Técnica donde cada peso de tus ingresos tiene un destino asignado. Nada queda "sin plan". Suma 0 al final.' },
-];
 
 export const INFO = {
   dashboard: {
@@ -89,41 +52,43 @@ export const INFO = {
     expenses: {
       title: 'Gastos',
       howItWorks: [
-        'La pestaña de gastos tiene dos secciones: "Gastos frecuentes" y "Otros gastos".',
-        '"Gastos frecuentes" son los que se repiten cada mes, cada 15 días o cada semana. Toca una tarjeta para ver los pagos esperados y confirmar cuánto pagaste.',
-        'Los gastos fijos muestran el monto de siempre al confirmar. Los variables te piden que ingreses cuánto pagaste esta vez.',
-        '"Otros gastos" son los únicos — compras espontáneas, imprevistos, cualquier gasto que no se repite.',
-        'Toca cualquier tarjeta para ver opciones: editar, eliminar o quitar una confirmación.',
+        'Esta pestaña tiene dos secciones: "Gastos frecuentes" y "Otros gastos".',
+        '¿Qué va en Gastos frecuentes? Solo gastos que se repiten con una fecha conocida: Internet, Gym, Arriendo, Agua, Luz, Teléfono. La app genera un slot de pago por período y tú confirmas cuando pagas.',
+        '¿Qué NO va aquí? Comida, entretenimiento, caprichos, imprevistos. Esos no tienen fecha fija — van en Finanzas → Presupuesto como categorías de gasto libre.',
+        '"Otros gastos" son compras únicas que no se repiten: un electrodoméstico, una visita al médico, cualquier gasto espontáneo. Sin plantilla.',
+        'Cada gasto que registras tiene una categoría (Alimentación, Ocio, etc.). Esa categoría reduce automáticamente el presupuesto correspondiente en Finanzas → Presupuesto.',
       ],
       glossary: [
-        { term: 'Gasto frecuente',  definition: 'Plantilla de un gasto que se repite según su frecuencia. Genera slots de pago cada mes.' },
-        { term: 'Otro gasto',       definition: 'Gasto único que no se repite. No tiene plantilla.' },
-        { term: 'Fijo',             definition: 'El monto es siempre el mismo (ej. arriendo).' },
+        { term: 'Gasto frecuente',  definition: 'Gasto que se repite en fechas conocidas. Genera slots de pago por período.' },
+        { term: 'Otro gasto',       definition: 'Gasto único, no se repite. Sin plantilla ni slot de pago.' },
+        { term: 'Fijo',             definition: 'El monto es siempre el mismo (ej. Internet $25).' },
         { term: 'Variable',         definition: 'El monto cambia cada vez (ej. electricidad).' },
-        { term: 'Confirmar pago',   definition: 'Registrar que pagaste un gasto frecuente en un slot determinado.' },
-        { term: 'Quitar',           definition: 'Cancelar la confirmación de un pago. El slot vuelve a estar pendiente.' },
-        { term: 'Clasificación',    definition: 'Cómo categorizas el gasto: Necesidad, Calidad de vida, Productividad o Capricho.' },
+        { term: 'Confirmar pago',   definition: 'Registrar que pagaste un gasto frecuente en su slot de pago.' },
+        { term: 'Quitar',           definition: 'Cancelar la confirmación de un pago. El slot vuelve a pendiente.' },
+        { term: 'Clasificación',    definition: 'Cómo categorizas el impacto del gasto: Necesidad, Calidad de vida, Productividad o Capricho.' },
+        { term: 'Categoría',        definition: 'Tag del gasto que lo conecta con tu presupuesto en Finanzas → Presupuesto.' },
       ],
     },
   },
   finance: {
     budget: {
-      title: 'Presupuesto',
+      title: 'Presupuesto de Gastos',
       howItWorks: [
-        'Antes de que empiece el mes, decides cuánto puedes gastar en cada categoría. La barra de cada categoría muestra cuánto llevas gastado.',
-        'REGLA DE ORO: El día que cobras, mueve $2,000 a otra cuenta ANTES de tocar el dinero para gastos. El ahorro no es lo que sobra — es lo primero que sale.',
-        'Cuando una barra está verde puedes gastar con calma. Amarilla: casi llegas al límite. Roja: ya te pasaste.',
-        'Técnica Zero-Based Budgeting: cada peso de tus ingresos tiene un destino. Ahorro + gastos fijos + gastos variables = total de ingresos. Nada queda sin asignar.',
+        'Aquí defines cuánto quieres gastar en cada categoría del día a día. Cada vez que registras un gasto en Movimientos, la barra de esa categoría baja automáticamente.',
+        '¿Qué va AQUÍ? Gastos sin fecha fija: Alimentación, Ocio, Caprichos, Imprevistos, Transporte, Higiene, Salud, Tecnología. Cosas que puedes gastar hoy, mañana o distribuir en la semana.',
+        '¿Qué NO va aquí? Servicios con fecha conocida: Internet, Gym, Arriendo, Agua, Luz. Esos van en Movimientos → Gastos frecuentes, que genera un slot de pago con fecha.',
+        'REGLA DE ORO: El día que cobras, mueve tu ahorro ANTES de tocar el dinero. Lo que queda es lo que puedes repartir entre estas categorías.',
+        'Si la suma de tus categorías supera lo disponible, la app te avisa. Esa es la señal de que necesitas ajustar algún límite.',
       ],
-      glossary: GLOSSARY_BASE.filter(g => ['Presupuesto', 'Zero-based budgeting', 'Gasto fijo', 'Gasto variable', 'Excedido', 'Flujo de caja', 'Ahorro'].includes(g.term)),
+      glossary: GLOSSARY_BASE.filter(g => ['Presupuesto', 'Zero-based budgeting', 'Gasto fijo', 'Gasto variable', 'Excedido', 'Flujo de caja', 'Ahorro', 'Disponible'].includes(g.term)),
     },
     networth: {
-      title: 'Patrimonio',
+      title: 'Ahorro Acumulado',
       howItWorks: [
-        'Cada mes registras cuánto tienes ahorrado en total. El sistema proyecta cuándo llegarás a $15,000 asumiendo $2,000 de ahorro por mes.',
+        'Cada mes registras cuánto tienes ahorrado en total. El sistema proyecta cuándo llegarás a tu meta asumiendo tu ritmo de ahorro actual.',
         'La fila en verde es el mes en que alcanzas la meta. Las filas proyectadas son estimaciones — cambiarán si ahorras más o menos.',
         'Actualiza tu ahorro real al inicio de cada mes. Eso mantiene las proyecciones exactas.',
-        'Ver tu patrimonio crecer mes a mes es el motivador más poderoso para mantener el hábito. La visualización transforma el esfuerzo en progreso tangible.',
+        'Ver tu ahorro crecer mes a mes es el motivador más poderoso para mantener el hábito. La visualización transforma el esfuerzo en progreso tangible.',
       ],
       glossary: GLOSSARY_BASE.filter(g => ['Patrimonio neto', 'Ahorro', 'Proyección', 'Liquidez', 'Meta financiera'].includes(g.term)),
     },

@@ -10,6 +10,7 @@ export function NetworthTab({ ctx }: { ctx: FinanceCtx }) {
     networthFilter, setNetworthFilter,
     showNetworthFilter, setShowNetworthFilter,
     setAddNetworthOpen, setEditNetworth, setConfirm,
+    currentSaved, monthsRemaining, goalAmount,
   } = ctx;
 
   return (
@@ -36,6 +37,22 @@ export function NetworthTab({ ctx }: { ctx: FinanceCtx }) {
               {NETWORTH_FILTER_LABELS[f]}
             </button>
           ))}
+        </div>
+      )}
+
+      {goalAmount > 0 && currentSaved < goalAmount && monthsRemaining !== null && (
+        <div className={styles.projectionBanner}>
+          <span className="material-symbols-outlined">trending_up</span>
+          <span>
+            {`A este ritmo llegas a $${fmtAmt(goalAmount)} en `}
+            <strong>{monthsRemaining === 1 ? '1 mes' : `${monthsRemaining} meses`}</strong>
+          </span>
+        </div>
+      )}
+      {goalAmount > 0 && currentSaved >= goalAmount && (
+        <div className={`${styles.projectionBanner} ${styles.projectionBannerDone}`}>
+          <span className="material-symbols-outlined">check_circle</span>
+          <span><strong>¡Meta alcanzada!</strong> Llevas ${fmtAmt(currentSaved)} ahorrados.</span>
         </div>
       )}
 

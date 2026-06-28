@@ -41,3 +41,19 @@ export function apiPut<T>(path: string, body: unknown): Promise<T> {
 export function apiDelete(path: string): Promise<void> {
   return request<void>(path, { method: 'DELETE' });
 }
+
+export async function apiGetBlob(path: string): Promise<Blob> {
+  const response = await fetch(`${API_BASE}${path}`, { headers: getAuthHeader() });
+  if (response.status === 401) {
+    const hadToken = !!localStorage.getItem('auth_token');
+    localStorage.removeItem('auth_token');
+    localStorage.removeItem('auth_user');
+    if (hadToken) window.location.href = '/login';
+    throw new Error('Session expired');
+  }
+  if (!response.ok) {
+    const text = await response.text();
+    throw new Error(`API error ${response.status}: ${text}`);
+  }
+  return response.blob();
+}

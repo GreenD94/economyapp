@@ -22,7 +22,7 @@
   color: var(--c-text-muted);
   text-decoration: none;
   flex: 1;
-  gap: 2px;
+  gap: 4px;
   font-size: 11px;
   transition: color 0.15s;
 }

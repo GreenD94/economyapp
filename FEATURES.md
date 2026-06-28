@@ -39,11 +39,19 @@ Status: `done` · `partial` · `missing`
 |---|---|---|
 | `useIncomes` hook | `done` | CRUD, month filter, month navigation |
 | `useIncomeSources` hook | `done` | CRUD for recurring income source templates |
-| `useExpenses` hook | `done` | CRUD, month filter, category filter |
-| `TransactionsContainer` | `done` | Tabs: incomes (Fuentes + Otros sections) / expenses; unified confirm-source modal with DateTimePicker |
+| `useExpenses` hook | `done` | CRUD, month filter, multi-select category+type filter |
+| `useExpenseSources` hook | `done` | CRUD for recurring expense source templates (Cycle 06) |
+| `TransactionsContainer` | `done` | Tabs: incomes (Fuentes + Otros) / expenses (Frecuentes + Otros); month nav; summary sheet on bar tap |
+| Income progress bar + IncomeSummarySheet | `done` | 52px pill bar (confirmed/expected); tap → insight sheet; CSV export icon |
+| Expense progress bar + ExpenseSummarySheet | `done` | 52px pill bar; tap → comparison sheet with mini bars per category; CSV export icon |
+| `useIncomeInsight` hook | `done` | Fetches `GET /api/v1/analytics/incomes/insight?month=`; insight text |
+| `useExpenseComparison` hook | `done` | Fetches `GET /api/v1/analytics/expenses/comparison?month=`; category deltas with mini bars |
+| Inline filter panel (Gastos) | `done` | Grid height transition; ExpenseFilterKeyboard bottom sheet; chips show selected names; red dot |
 | Backend — incomes | `done` | `GET/POST/PUT/DELETE /api/v1/incomes`; date stored as TIMESTAMP |
 | Backend — expenses | `done` | `GET/POST/PUT/DELETE /api/v1/expenses`; date stored as TIMESTAMP; 18 valid categories |
 | Backend — income sources | `done` | `GET/POST/PUT/DELETE /api/v1/income-sources` |
+| Backend — expense sources | `done` | `GET/POST/PUT/DELETE /api/v1/expense-sources` (Cycle 06) |
+| Backend — analytics | `done` | `/api/v1/analytics/incomes/insight`, `/expenses/comparison`, `/incomes/export/csv`, `/expenses/export/csv` |
 
 ---
 
@@ -127,8 +135,8 @@ Status: `done` · `partial` · `missing`
 | `MoneyInput` | `done` | European-format money input with NumericKeyboard |
 | `NumericKeyboard` | `done` | Phone-pad digit keyboard; ghost-click safe (closing-backdrop pattern) |
 | `HourMinuteInput` | `done` | Two-field HH:MM picker backed by NumericKeyboard; auto-advances H→M |
-| `DateTimePicker` | `done` | Three-mode picker: chips (Hoy/Ayer/Hace 2 días) → picking (date+time row) → confirmed (text display) |
-| `api.client.ts` | `done` | `apiGet/apiPost/apiPut/apiDelete`; auto-injects Bearer token |
+| `DateTimePicker` | `done` | Three-mode: chips → picking → confirmed; `month` prop skips chips for non-current months (starts in picking, pre-filled day 1) |
+| `api.client.ts` | `done` | `apiGet/apiPost/apiPut/apiDelete/apiGetBlob`; auto-injects Bearer token |
 | `info.content.ts` | `done` | INFO object with English keys; terminology per feature |
 | `api.types.ts` | `done` | Shared TypeScript types for API responses |
 
@@ -143,6 +151,7 @@ Status: `done` · `partial` · `missing`
 | Settings page | ✅ Done |
 | Transactions (incomes + expenses) | ✅ Done |
 | Income sources (recurring templates) | ✅ Done |
+| Expense sources (recurring templates) | ✅ Done |
 | Finance (budget + net worth) | ✅ Done |
 | Budget "Confirmar pago" flow | ✅ Done |
 | Purchases (wishlist + decision) | ✅ Done |
@@ -150,7 +159,12 @@ Status: `done` · `partial` · `missing`
 | Dashboard | ✅ Done |
 | Navigation shell | ✅ Done |
 | English identifiers throughout | ✅ Done |
-| Backend API | ✅ Done (all economy endpoints) |
+| Backend API | ✅ Done (all economy + analytics endpoints) |
 | NumericKeyboard (ghost-click safe) | ✅ Done |
 | HourMinuteInput | ✅ Done |
-| DateTimePicker (3-mode) | ✅ Done |
+| DateTimePicker (3-mode + past-month fix) | ✅ Done |
+| Progress bars (Ingresos + Gastos tabs) | ✅ Done |
+| Income insight sheet (FT-07) | ✅ Done |
+| Expense comparison sheet + mini bars (FT-08) | ✅ Done |
+| CSV export — incomes + expenses (FT-06) | ✅ Done |
+| Inline filter panel + keyboard (Gastos) | ✅ Done |

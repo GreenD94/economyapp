@@ -4,6 +4,48 @@ Priority: `P1` critical · `P2` important · `P3` nice-to-have
 
 ---
 
+## Cycle 09 — Presupuesto Tab Redesign: Master Budget + Bolsillos (2026-06-28) — DONE
+
+Master budget bar shows all real expenses vs income−savings maximum. Bolsillos section replaces the flat category list with a named section + detail sheet showing actual expense transactions. All 5 tasks complete. Zero TS errors. All files ≤ 200 lines.
+
+| Task | Description | Status |
+|---|---|---|
+| EA-C09-01 | useBudget hook: add expense fetch, totalRealExpenses, surplusSavings, allExpenses | DONE |
+| EA-C09-02 | BudgetTab: two-section layout (master bar + bolsillos) | DONE |
+| EA-C09-03 | MasterBudgetBar + MasterBudgetSheet components | DONE |
+| EA-C09-04 | BolsilloDetailSheet: stats + expense list + edit/delete | DONE |
+| EA-C09-05 | Remove old budget detail modal; clean up dead state | DONE |
+
+Task files: `tasks/economy-app/cycle-09/`
+
+---
+
+## Cycle 08 — Budget Setup & UX Clarity (2026-06-28) — DONE
+
+Presupuesto tab gets category setup form + empty state + guidance banners. Both Finance and Movimientos ⓘ info modals rewritten with explicit "what goes here / what doesn't" rules. All 7 tasks complete. Zero TS errors. All files ≤ 200 lines.
+
+| Task | Description | Status |
+|---|---|---|
+| EA-C08-01 | Add category setup to Finance Presupuesto tab (create + delete) | DONE |
+| EA-C08-02 | Empty state for Presupuesto tab when 0 categories | DONE |
+| EA-C08-03 | Guidance banner in Presupuesto tab (always visible) | DONE |
+| EA-C08-04 | Guidance banner in Movimientos Gastos tab (always visible) | DONE |
+| EA-C08-05 | Update ⓘ INFO content for Finance → Presupuesto | DONE |
+| EA-C08-06 | Update ⓘ INFO content for Movimientos → Gastos | DONE |
+| EA-C08-07 | Fix Presupuesto UX language (Disponible → Restante; cap jargon → plain) | DONE |
+
+Task files: `tasks/economy-app/cycle-08/` (CYCLE-08-OVERVIEW.md + TASK-EA-C08-01 through TASK-EA-C08-07)
+
+---
+
+## Cycle 07 — Finance page audit fixes + refactor (2026-06-28) — DONE
+
+All 12 tasks complete. 11 UI/UX violations fixed: nested button, semantic colors, bar animation, thresholds, tap hints, DotsMenu removed, conversational labels, DateTimePicker in networth modals, conditional submit buttons, filter chip scroll. All files ≤ 200 lines. Zero TS errors.
+
+Task files: `tasks/economy-app/cycle-07/` (CYCLE-07-OVERVIEW.md + TASK-EA-C07-01 through TASK-EA-C07-12)
+
+---
+
 ## P1 — Soft delete (SD cycle)
 
 No economy data is ever hard-deleted. All deletes set `deleted_at = NOW()`. All queries filter `WHERE deleted_at IS NULL`. Auth tables (`users`, `roles`, `user_roles`), `settings`, and audit logs (`income_source_edits`, `income_unconfirm_log`) are excluded.
@@ -21,18 +63,12 @@ After all SD tasks: run `npx tsc --noEmit` (zero errors) and boot backend to ver
 
 ---
 
-## Cycle 05 — Datetime, income confirm flow, DateTimePicker (2026-06-20)
+## Cycle 05 — Datetime, income confirm flow, DateTimePicker (2026-06-20) — DONE
 
-- [x] **EA-C05-01** Backend: `incomes.date` + `expenses.date` → `TIMESTAMP WITHOUT TIME ZONE` (migration 008); model/schema/repo updated to `dt.datetime`; `.replace(tzinfo=None)` on insert
-- [x] **EA-C05-02** Frontend: all date chips emit `.toISOString()` (full datetime, not date-only slice)
-- [x] **EA-C05-03** `HourMinuteInput` component — two NumericKeyboard-backed fields (HH 0–23 / MM 0–59), auto-advances H→M on Done
-- [x] **EA-C05-04** `DateTimePicker` component — 3-mode: chips / picking (date+time row) / confirmed (text display + Cancelar)
-- [x] **EA-C05-05** DateTimePicker wired into all 7 date entry points (5 in Transactions, 2 in Finance)
-- [x] **EA-C05-06** Income source unified confirm modal (`confirmSrcModal`) — both fixed (Confirmar) and variable (Ingresar monto) use same modal with DateTimePicker
-- [x] **EA-C05-07** Budget "Confirmar pago" button + modal with DateTimePicker; `confirmPayment()` in `useBudget`
-- [x] **EA-C05-08** Dashboard: disponible clamps to `Math.max(0, disponible)`; negative breakdown row when disponible < 0
-- [x] **EA-C05-09** NumericKeyboard ghost-click fix — closing-backdrop pattern absorbs synthesized clicks for 320ms after keyboard dismisses
-- [x] **EA-C05-10** VALID_CATEGORIES expanded (added Internet, Gym, Carro, Claude, Caprichos, Tecnologia, others); frontend CATEGORIES array synced
+All 10 tasks complete. DateTimePicker (3-mode: chips/picking/confirmed), HourMinuteInput, migration 008 (incomes+expenses → TIMESTAMP), NumericKeyboard ghost-click closing-backdrop fix, unified income confirm modal, budget "Confirmar pago" modal, dashboard disponible clamp, VALID_CATEGORIES expanded to 18.
+
+Task files: `tasks/economy-app/cycle-05/` (CYCLE-05-OVERVIEW.md + TASK-EA-C05-01 through TASK-EA-C05-10)
+
 - [ ] **EA-C04-02** [FUTURE] Native keyboard toggle — opt-in fallback to native keyboard per input
 
 ---
@@ -114,7 +150,7 @@ Global rule: no frontend `.tsx` or `.ts` file may exceed 200 lines. Transactions
 - [x] **BR-03** Backend: `income_edits` audit log — confirmed done in prior session; migration 012; model + repo; POST on every PUT /incomes/:id (2026-06-21)
 - [x] **BR-04** Security: Pydantic `max_length` on incomes, expenses, income_sources schemas (Annotated + Field); frontend `maxLength` on networth notes inputs (2026-06-22)
 - [x] **BR-05** Backend: `incomes.type` validated against `Literal["Fijo", "Variable", "Extra"]` in schema (2026-06-22)
-- [ ] **BR-06** Remove notes field from add-income modal (create form has no notes per business rules)
+- [x] **BR-06** Remove notes field from add-income modal (create form has no notes per business rules) — already absent, confirmed 2026-06-28
 
 ---
 
@@ -139,7 +175,7 @@ Global rule: no frontend `.tsx` or `.ts` file may exceed 200 lines. Transactions
 ## P2 — Features
 
 - [x] **FT-01** Recurring income/expense — superseded by EA-C06 (full expense-source system built in Cycle-06)
-- [ ] **FT-02** Export to CSV — download current month incomes + expenses as a CSV file (for accountants / tax season). A real finance expert always prepares your records for you.
+- [x] **FT-02** Export to CSV — superseded by **FT-06** (implemented 2026-06-27 via file_download icon in IncomeSummarySheet + ExpenseSummarySheet).
 - [ ] **FT-03** Category spending chart — bar/pie chart of expenses by category in the budget tab
 - [ ] **FT-04** Delete account — from profile page
 - [ ] **FT-05** Currency setting — let user pick symbol ($ / € / £ / etc.) saved in settings
@@ -148,11 +184,41 @@ Global rule: no frontend `.tsx` or `.ts` file may exceed 200 lines. Transactions
 
 > **⚠️ BEFORE implementing FT-06/07/08: talk to the user about UI/UX navigation.** The `/transactions` view already has a lot going on. These features need a clear entry point / navigation pattern that doesn't overload the current layout. Agree on the approach before writing any code.
 
-- [ ] **FT-06** CSV export for `/transactions` — Download current month's incomes + expenses as CSV. Single action (button or menu item). Fields: date, type (ingreso/gasto), source/description, amount, category (expenses), classification (expenses). Scope: current displayed month only. A hired finance expert always hands you a clean record when asked.
+- [x] **FT-06** CSV export for `/transactions` — Download current month's incomes + expenses as CSV. Implemented via file_download icon in IncomeSummarySheet + ExpenseSummarySheet headers; backend `/api/v1/analytics/{incomes,expenses}/export/csv?month=` endpoints. (2026-06-27)
 
-- [ ] **FT-07** Monthly insight line — A one-sentence proactive summary a finance expert would say: "Confirmaste 3 de 4 fuentes. Te faltan $X esta quincena." Surfaces the *gap* (confirmed vs. expected) rather than just showing raw numbers. Lives somewhere in the Ingresos tab header area. Must not add visual noise — one line, muted style.
+- [x] **FT-07** Monthly insight line — Proactive one-sentence summary in IncomeSummarySheet: "Confirmaste X de Y fuentes. Te faltan $Z por confirmar." Surfaces confirmed vs. expected gap. Backed by `/api/v1/analytics/incomes/insight?month=`. (2026-06-27)
 
-- [ ] **FT-08** Month-over-month expense comparison — Per-category delta vs. prior month: "Alimentación: $340 este mes vs $210 el mes pasado (+62%)". A finance expert flags unusual spending months immediately. Entry point TBD (talk to user about UI/UX placement before building).
+- [x] **FT-08** Month-over-month expense comparison — Per-category delta vs. prior month with mini comparison bars (current=pink, previous=muted pink) in ExpenseSummarySheet. Backed by `/api/v1/analytics/expenses/comparison?month=`. Entry point: tap progress bar in Gastos tab. (2026-06-27)
+
+---
+
+## P2 — Future features (queued for UI/UX discussion)
+
+> These were captured during UI/UX audit sessions. Do not implement without first discussing approach, scope, and UI placement with the user.
+
+- [ ] **FT-09** Bank statement import (Excel/CSV upload) — User exports N months of transactions from multiple bank accounts and uploads them; app parses and loads into Movimientos. **Discuss after all current features have been UI/UX audited.** Key questions: file format per bank, column mapping, duplicate detection, conflict resolution, which view receives the imported data.
+
+- [ ] **FT-10** Google login — OAuth 2.0 sign-in alongside existing email/password flow. Backend needs Google token verification endpoint; frontend adds "Continuar con Google" button on auth screen.
+
+- [ ] **FT-11** Multi-currency support — User holds money in multiple currencies simultaneously (USD, USDT, USDC, Bs., Zelle, PayPal, etc.). Especially relevant for Venezuelan context where inflation forces constant currency swaps. Key questions: base display currency, exchange rate source (manual vs. live), how amounts are tagged per currency, how totals aggregate across currencies.
+
+- [ ] **FT-12** Per-bank-account balance tracking — Track remaining balance per bank/wallet account (e.g., Bancamiga USD, Binance USDT, PayPal). **Discuss whether this is necessary** before implementing — may overlap with net worth module. Defer until current feature set is stable and audited.
+
+### Finance view — "finance professional" audit findings (2026-06-28)
+
+> These came out of a non-technical audit of the /finance view against what a real finance professional would expect. Captured from session. Do not implement without discussing UI placement and scope.
+
+- [ ] **FT-13** "Pay Yourself First" budget line — The $2,000/month savings goal should appear as the **first and biggest line in Presupuesto**, just like any other monthly commitment. Right now savings lives on a separate tab and never constrains the budget. A finance professional would call this the most critical missing piece: total budgeted (savings + expense categories) must equal income, not just expense categories alone. Requires design decision: does it show as a locked/read-only line pulled from settings, or is it editable here?
+
+- [ ] **FT-14** Budget cap enforcement — The app lets you budget any amount across categories with no ceiling. But income ($2,900) minus savings goal ($2,000) leaves only $900 for all expense categories. The app should calculate this cap from settings and warn — or block — when the sum of expense categories exceeds it. Surfaces the constraint the user is actually living under.
+
+- [x] **FT-15** Rename "Patrimonio" tab → "Ahorro" (2026-06-28). Tab label updated in Finance.container.tsx; info.content.ts title updated to "Ahorro Acumulado." Tab stays "networth" internally.
+
+- [ ] **FT-16** Debt tracking module — A real net worth calculation requires knowing what you owe, not just what you've saved. Add a section (likely within the Finance view, or a new Deudas tab) to log debts: credit cards, loans, informal IOUs. Each debt entry needs: who you owe, how much, interest rate (optional), minimum monthly payment (optional). This unlocks honest net worth = savings − debts, and surfaces if paying debt faster beats saving.
+
+- [x] **FT-17** Savings projection (2026-06-28). Shows "A este ritmo llegas a $X en N meses" in the Ahorro tab. Based on avg of actual entries; falls back to monthlySavingsTarget if <2 actuals. Shows "¡Meta alcanzada!" when currentSaved ≥ goal.
+
+- [x] **FT-14** Budget cap enforcement (2026-06-28). Cap row below summary card shows spending cap (income − savings target) vs total budgeted. Green when within cap, pink warning when exceeded.
 
 ---
 

@@ -25,15 +25,22 @@ function formatDisplay(iso: string) {
   return `${date} · ${h}:${m}`;
 }
 
+function currentMonthStr() {
+  const now = new Date();
+  return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+}
+
 type Props = {
   value: string;
   onChange: (iso: string) => void;
   label?: string;
   variant?: 'spend' | 'earn';
+  month?: string;
 };
 
-export function DateTimePicker({ value, onChange, label = '¿Cuándo?', variant }: Props) {
-  const [mode,  setMode]  = useState<Mode>('chips');
+export function DateTimePicker({ value, onChange, label = '¿Cuándo?', variant, month }: Props) {
+  const skipChips = month != null && month !== currentMonthStr();
+  const [mode,  setMode]  = useState<Mode>(skipChips ? 'picking' : 'chips');
   const [draft, setDraft] = useState(value);
 
   function selectChip(iso: string) {
@@ -51,7 +58,11 @@ export function DateTimePicker({ value, onChange, label = '¿Cuándo?', variant 
     setMode('confirmed');
   }
 
-  function cancelBack() {
+  function cancelConfirmed() {
+    setMode('picking');
+  }
+
+  function cancelPicking() {
     setMode('chips');
   }
 
@@ -66,7 +77,7 @@ export function DateTimePicker({ value, onChange, label = '¿Cuándo?', variant 
           <span className="material-symbols-outlined">calendar_today</span>
           <span>{formatDisplay(value)}</span>
         </div>
-        <button className={styles.cancelBtn} onClick={cancelBack}>Cancelar</button>
+        <button className={styles.cancelBtn} onClick={cancelConfirmed}>Cancelar</button>
       </div>
     );
   }
@@ -91,7 +102,9 @@ export function DateTimePicker({ value, onChange, label = '¿Cuándo?', variant 
           />
         </div>
         <button className={styles.confirmBtn} onClick={confirmPicking}>Confirmar</button>
-        <button className={styles.cancelBtn}  onClick={cancelBack}>Cancelar</button>
+        {!skipChips && (
+          <button className={styles.cancelBtn} onClick={cancelPicking}>Cancelar</button>
+        )}
       </div>
     );
   }

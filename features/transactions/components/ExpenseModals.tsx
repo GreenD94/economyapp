@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Modal } from '@/features/core/components/Modal.component';
 import { MoneyInput } from '@/features/core/components/MoneyInput.component';
 import { DateTimePicker } from '@/features/core/components/DateTimePicker.component';
@@ -14,6 +14,11 @@ import type { TransactionCtx } from '../hooks/useTransactions.hook';
 type PickerMode = 'category' | 'classification';
 const CLASSIFICATIONS = ['Necesidad', 'Calidad de vida', 'Productividad', 'Capricho'];
 
+function firstOfMonthISO(month: string): string {
+  const [y, m] = month.split('-').map(Number);
+  return new Date(y, m - 1, 1, 12, 0, 0).toISOString();
+}
+
 export function ExpenseModals({ ctx }: { ctx: TransactionCtx }) {
   const {
     addExpenseOpen, setAddExpenseOpen, expenseForm, setExpenseForm, submitAddExpense,
@@ -21,6 +26,20 @@ export function ExpenseModals({ ctx }: { ctx: TransactionCtx }) {
     unconfirmExpenseModal, setUnconfirmExpenseModal, submitUnconfirmExpense,
     setConfirm,
   } = ctx;
+
+  const viewedMonth = ctx.expenseHook.month;
+  const currMonth   = new Date().toISOString().slice(0, 7);
+  const isCurrentViewMonth = viewedMonth === currMonth;
+
+  useEffect(() => {
+    if (addExpenseOpen && !isCurrentViewMonth && !expenseForm.date.startsWith(viewedMonth)) {
+      setExpenseForm(f => ({ ...f, date: firstOfMonthISO(viewedMonth) }));
+    }
+  }, [addExpenseOpen, viewedMonth]);
+
+  const addFormDate = isCurrentViewMonth
+    ? expenseForm.date
+    : (expenseForm.date.startsWith(viewedMonth) ? expenseForm.date : firstOfMonthISO(viewedMonth));
 
   const [pickerMode, setPickerMode] = useState<PickerMode | null>(null);
   const activeForm = addExpenseOpen ? expenseForm : editExpenseForm;
@@ -38,8 +57,8 @@ export function ExpenseModals({ ctx }: { ctx: TransactionCtx }) {
       {/* Add expense */}
       <Modal open={addExpenseOpen} onClose={() => { setAddExpenseOpen(false); setExpenseForm({ ...EMPTY_EXPENSE, date: nowISO() }); }} title="Agregar gasto" variant="spend">
         <div className={modalStyles.formField}>
-          <DateTimePicker label="¿Cuándo pagaste?" variant="spend" value={expenseForm.date}
-            onChange={iso => setExpenseForm({ ...expenseForm, date: iso })} />
+          <DateTimePicker label="¿Cuándo pagaste?" variant="spend" value={addFormDate}
+            month={viewedMonth} onChange={iso => setExpenseForm({ ...expenseForm, date: iso })} />
         </div>
         <div className={modalStyles.formField}>
           <label className={modalStyles.formLabel}>¿Qué compraste o pagaste?</label>
@@ -76,7 +95,7 @@ export function ExpenseModals({ ctx }: { ctx: TransactionCtx }) {
       <Modal open={editExpense !== null} onClose={() => { setEditExpense(null); setEditExpenseNote(''); }} title="Editar gasto" variant="spend">
         <div className={modalStyles.formField}>
           <DateTimePicker label="¿Cuándo pagaste?" value={editExpenseForm.date}
-            onChange={iso => setEditExpenseForm({ ...editExpenseForm, date: iso })} />
+            month={viewedMonth} onChange={iso => setEditExpenseForm({ ...editExpenseForm, date: iso })} />
         </div>
         <div className={modalStyles.formField}>
           <label className={modalStyles.formLabel}>¿Qué compraste o pagaste?</label>

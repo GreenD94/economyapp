@@ -4,6 +4,87 @@ Most recent entries at the top.
 
 ---
 
+## 2026-06-27 — FT-06/07/08: progress bars, summary sheets, CSV export, comparison bars, DateTimePicker fix
+
+### Frontend — progress bars (IncomesTab + ExpensesTab)
+
+- Replaced Esperado/Confirmado bordered two-column card with a 52px pill progress bar (matches dashboard style)
+- `fillPct = Math.min(100, confirmed / expected * 100)`; bar hidden when `expected === 0` (no denominator)
+- Segment labels inside bar when ≥ 15% wide; fallback labels + text below bar when too narrow
+- Bar is tappable (`role="button"`, `tabIndex={0}`) → opens summary sheet
+- Hint below bar: "Toca para ver detalles" (10px muted)
+- CSS: `.progressWrap`, `.progressBar`, `.progressFillEarn`, `.progressFillSpend`, `.progressFillLabel`, `.progressRemainLabel`, `.progressMeta`, `.progressMetaConfirm*`, `.progressMetaExpected`, `.progressHint`
+
+### Frontend — IncomeSummarySheet + useIncomeInsight (FT-07)
+
+- `IncomeSummarySheet.tsx` at `features/transactions/components/`
+- `useIncomeInsight.hook.ts` at `features/transactions/hooks/`; fetches `GET /api/v1/analytics/incomes/insight?month=YYYY-MM`
+- Insight text: 4 variants based on `confirmed_sources` vs `total_sources`
+- Header: title + CSV export icon button (file_download / hourglass_empty while loading)
+- Standard closing/revealed pattern (260ms reveal)
+
+### Frontend — ExpenseSummarySheet + useExpenseComparison (FT-08)
+
+- `ExpenseSummarySheet.tsx` at `features/transactions/components/`
+- `useExpenseComparison.hook.ts` at `features/transactions/hooks/`; fetches `GET /api/v1/analytics/expenses/comparison?month=YYYY-MM`
+- Top 5 categories by current spending; delta badge (↑ pink / ↓ green / "Nuevo")
+- Mini comparison bars per category row: two 6px tracks, shared scale across all displayed deltas
+  - Current month: `--c-spend` (solid pink)
+  - Previous month: `rgba(194, 24, 91, 0.28)` (muted pink)
+  - 800ms ease-out transition; `maxAmount` computed from `flatMap([current, previous])`
+- CSS: `.summaryDeltaRow` (flex-column), `.summaryDeltaTop`, `.summaryBarGroup`, `.summaryBarTrack`, `.summaryBarFillCurrent`, `.summaryBarFillPrevious`, `.summarySheetHeader`, `.summaryExportIconBtn`, `.summaryInsight`, `.summaryCompSection`, `.summaryDeltaCategory`, `.summaryDeltaRight`, `.summaryDeltaAmount`, `.summaryDeltaUp`, `.summaryDeltaDown`, `.summaryDeltaMuted`
+
+### Frontend — CSV export via apiGetBlob (FT-06)
+
+- `apiGetBlob(path)` added to `api.client.ts`: fetches with JWT header, returns `Blob`
+- Download pattern: `URL.createObjectURL(blob)` → hidden `<a>` → `a.click()` → `URL.revokeObjectURL()`
+- File names: `ingresos_YYYY-MM.csv` / `gastos_YYYY-MM.csv`
+
+### Frontend — DateTimePicker fix for non-current months
+
+- New `month?: string` prop on `DateTimePicker.component.tsx`
+- When `month !== currentMonthStr()`: mounts in `picking` mode; chips never shown; no Cancelar in picking; confirmed→picking (not chips)
+- `ExpenseModals.tsx`: imports `useEffect`; computes `viewedMonth`, `isCurrentViewMonth`, `addFormDate`; `useEffect` syncs form date to `firstOfMonthISO(viewedMonth)` on add modal open; both DateTimePickers receive `month={viewedMonth}`
+- `IncomeModals.tsx`: same pattern using `ctx.incomeHook.month`
+- Helper `firstOfMonthISO(month)`: `new Date(y, m-1, 1, 12, 0, 0).toISOString()` (noon local time)
+
+### Frontend — UI-UX-RULES.md
+
+- Added "Sheet dismiss — no close or X buttons" rule: backdrop-only dismiss; exceptions for destructive/multi-step/full-screen modals
+
+### Backend — analytics module
+
+New module at `legacy-python-backend/app/features/analytics/`:
+- `schemas.py`: `IncomeInsightResponse`, `CategoryDelta`, `ExpenseComparisonResponse`
+- `repository.py`: `income_insight()`, `expense_comparison()`, `incomes_for_export()`, `expenses_for_export()`; `_month_range()` + `_prev_month()` helpers
+- `service.py`: delegates to repository; CSV generation via `csv.writer` + `io.StringIO`
+- `router.py`: 4 endpoints (`insight`, `comparison`, `incomes/export/csv`, `expenses/export/csv`)
+- `main.py`: `include_router(analytics_router, prefix="/api/v1")`
+
+### TASKS.md
+
+- FT-06/07/08 marked done
+- FT-09 (bank import), FT-10 (Google login), FT-11 (multi-currency), FT-12 (bank balance) added as future discussion items
+
+---
+
+## 2026-06-27 — Transactions UI polish + MoneyInput keyboard bug fix
+
+### UI/UX
+
+- Detail sheet action buttons: Editar (green) + Eliminar (pink) side-by-side in 60px row; no fill colors
+- Removed Cancelar from both detail sheets (backdrop closes)
+- Removed ✕ close button from Modal component
+- ConfirmModal: danger button LEFT, Cancelar RIGHT
+- Removed all Cerrar/Cancelar-only buttons from all modals and sheets
+
+### Bug fix — MoneyInput keyboard stacking inside Modal
+
+- Root cause: `transform: translateY()` on `.body`/`.header` in Modal.module.css created a CSS containing block; `position: fixed` NumericKeyboard anchored to that block instead of viewport
+- Fix: removed all `transform` from Modal reveal classes; only `opacity` transitions now (no visual regression)
+
+---
+
 ## 2026-06-20 — Datetime, income sources, ghost-click fix, DateTimePicker (Cycle 05)
 
 ### Backend

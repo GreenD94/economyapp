@@ -1,4 +1,5 @@
 'use client';
+import { useEffect } from 'react';
 import { Modal } from '@/features/core/components/Modal.component';
 import { MoneyInput } from '@/features/core/components/MoneyInput.component';
 import { DateTimePicker } from '@/features/core/components/DateTimePicker.component';
@@ -7,6 +8,11 @@ import modalStyles from '@/features/core/components/Modal.module.css';
 import { EMPTY_INCOME } from '../transactions.types';
 import type { TransactionCtx } from '../hooks/useTransactions.hook';
 
+function firstOfMonthISO(month: string): string {
+  const [y, m] = month.split('-').map(Number);
+  return new Date(y, m - 1, 1, 12, 0, 0).toISOString();
+}
+
 export function IncomeModals({ ctx }: { ctx: TransactionCtx }) {
   const {
     addIncomeOpen, setAddIncomeOpen, incomeForm, setIncomeForm, submitAddIncome,
@@ -14,12 +20,26 @@ export function IncomeModals({ ctx }: { ctx: TransactionCtx }) {
     editIncomeNote, setEditIncomeNote, submitEditIncome,
   } = ctx;
 
+  const viewedMonth = ctx.incomeHook.month;
+  const currMonth   = new Date().toISOString().slice(0, 7);
+  const isCurrentViewMonth = viewedMonth === currMonth;
+
+  useEffect(() => {
+    if (addIncomeOpen && !isCurrentViewMonth && !incomeForm.date.startsWith(viewedMonth)) {
+      setIncomeForm(f => ({ ...f, date: firstOfMonthISO(viewedMonth) }));
+    }
+  }, [addIncomeOpen, viewedMonth]);
+
+  const addFormDate = isCurrentViewMonth
+    ? incomeForm.date
+    : (incomeForm.date.startsWith(viewedMonth) ? incomeForm.date : firstOfMonthISO(viewedMonth));
+
   return (
     <>
       <Modal open={addIncomeOpen} onClose={() => { setAddIncomeOpen(false); setIncomeForm(EMPTY_INCOME); }} title="Agregar ingreso" variant="earn">
         <div className={modalStyles.formField}>
-          <DateTimePicker label="¿Cuándo lo recibiste?" variant="earn" value={incomeForm.date}
-            onChange={iso => setIncomeForm({ ...incomeForm, date: iso })} />
+          <DateTimePicker label="¿Cuándo lo recibiste?" variant="earn" value={addFormDate}
+            month={viewedMonth} onChange={iso => setIncomeForm({ ...incomeForm, date: iso })} />
         </div>
         <div className={modalStyles.formField}>
           <label className={modalStyles.formLabel}>¿De dónde viene este ingreso?</label>
@@ -41,7 +61,7 @@ export function IncomeModals({ ctx }: { ctx: TransactionCtx }) {
       <Modal open={editIncome !== null} onClose={() => { setEditIncome(null); setEditIncomeNote(''); }} title="Editar ingreso" variant="earn">
         <div className={modalStyles.formField}>
           <DateTimePicker label="¿Cuándo lo recibiste?" value={editIncomeForm.date}
-            onChange={iso => setEditIncomeForm({ ...editIncomeForm, date: iso })} />
+            month={viewedMonth} onChange={iso => setEditIncomeForm({ ...editIncomeForm, date: iso })} />
         </div>
         <div className={modalStyles.formField}>
           <label className={modalStyles.formLabel}>¿De dónde viene este ingreso?</label>
